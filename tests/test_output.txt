@@ -1,0 +1,2643 @@
+============================= test session starts =============================
+platform win32 -- Python 3.12.10, pytest-7.4.4, pluggy-1.6.0 -- C:\Users\patriciods\AppData\Local\Programs\Python\Python312\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Users\patriciods\RAG\chat-analytics-poc\backend
+configfile: pyproject.toml
+plugins: anyio-4.12.0, asyncio-0.23.3, cov-4.1.0
+asyncio: mode=Mode.AUTO
+collecting ... collected 43 items
+
+test_auth.py::test_register_user FAILED                                  [  2%]
+test_auth.py::test_register_duplicate_email ERROR                        [  4%]
+test_auth.py::test_login_success ERROR                                   [  6%]
+test_auth.py::test_login_wrong_password ERROR                            [  9%]
+test_auth.py::test_get_me ERROR                                          [ 11%]
+test_auth.py::test_get_me_unauthorized PASSED                            [ 13%]
+test_chat.py::test_send_message_new_conversation ERROR                   [ 16%]
+test_chat.py::test_send_message_existing_conversation ERROR              [ 18%]
+test_chat.py::test_send_message_unauthorized PASSED                      [ 20%]
+test_chat.py::test_list_conversations_empty ERROR                        [ 23%]
+test_chat.py::test_list_conversations_with_data ERROR                    [ 25%]
+test_chat.py::test_get_conversation ERROR                                [ 27%]
+test_chat.py::test_get_conversation_not_found ERROR                      [ 30%]
+test_chat.py::test_create_conversation ERROR                             [ 32%]
+test_data.py::test_list_services_empty ERROR                             [ 34%]
+test_data.py::test_list_services ERROR                                   [ 37%]
+test_data.py::test_create_service_as_analyst ERROR                       [ 39%]
+test_data.py::test_create_service_as_viewer_forbidden ERROR              [ 41%]
+test_data.py::test_get_service ERROR                                     [ 44%]
+test_data.py::test_get_service_not_found ERROR                           [ 46%]
+test_data.py::test_create_cost ERROR                                     [ 48%]
+test_data.py::test_create_expense ERROR                                  [ 51%]
+test_data.py::test_list_service_costs ERROR                              [ 53%]
+test_data.py::test_list_service_expenses ERROR                           [ 55%]
+test_data.py::test_get_cost_vs_expense_analysis ERROR                    [ 58%]
+test_reports.py::test_list_reports_empty ERROR                           [ 60%]
+test_reports.py::test_list_reports_with_data ERROR                       [ 62%]
+test_reports.py::test_get_report ERROR                                   [ 65%]
+test_reports.py::test_get_report_not_found ERROR                         [ 67%]
+test_reports.py::test_download_report_not_ready ERROR                    [ 69%]
+test_reports.py::test_reports_unauthorized PASSED                        [ 72%]
+test_reports.py::test_generate_report_viewer_forbidden ERROR             [ 74%]
+test_services.py::TestJwtHandler::test_create_access_token PASSED        [ 76%]
+test_services.py::TestJwtHandler::test_decode_access_token PASSED        [ 79%]
+test_services.py::TestJwtHandler::test_decode_invalid_token PASSED       [ 81%]
+test_services.py::TestJwtHandler::test_token_with_expiry PASSED          [ 83%]
+test_services.py::TestPasswordHashing::test_hash_password FAILED         [ 86%]
+test_services.py::TestPasswordHashing::test_verify_password_correct FAILED [ 88%]
+test_services.py::TestPasswordHashing::test_verify_password_incorrect FAILED [ 90%]
+test_services.py::TestEnums::test_user_role_values PASSED                [ 93%]
+test_services.py::TestEnums::test_message_role_values PASSED             [ 95%]
+test_services.py::TestEnums::test_report_type_values PASSED              [ 97%]
+test_services.py::TestEnums::test_report_status_values PASSED            [100%]
+
+=================================== ERRORS ====================================
+_______________ ERROR at setup of test_register_duplicate_email _______________
+
+request = <SubRequest 'test_user' for <Coroutine test_register_duplicate_email>>
+kwargs = {'test_session': <sqlalchemy.ext.asyncio.session.AsyncSession object at 0x000001E34E6FAA50>}
+setup = <function _wrap_async_fixture.<locals>._async_fixture_wrapper.<locals>.setup at 0x000001E34E94CE00>
+
+    @functools.wraps(fixture)
+    def _async_fixture_wrapper(request: SubRequest, **kwargs: Any):
+        func = _perhaps_rebind_fixture_func(
+            fixture, request.instance, fixturedef.unittest
+        )
+        event_loop = kwargs.pop(event_loop_fixture_id)
+    
+        async def setup():
+            res = await func(
+                **_add_kwargs(func, kwargs, event_loop_fixture_id, event_loop, request)
+            )
+            return res
+    
+>       return event_loop.run_until_complete(setup())
+
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\pytest_asyncio\plugin.py:360: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\pytest_asyncio\plugin.py:355: in setup
+    res = await func(
+conftest.py:66: in test_user
+    password_hash=hash_password("testpass123"),
+..\app\auth\service.py:16: in hash_password
+    return pwd_context.hash(password)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\context.py:2258: in hash
+    return record.hash(secret, **kwds)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:779: in hash
+    self.checksum = self._calc_checksum(secret)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:591: in _calc_checksum
+    self._stub_requires_backend()
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2254: in _stub_requires_backend
+    cls.set_backend()
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2156: in set_backend
+    return owner.set_backend(name, dryrun=dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2163: in set_backend
+    return cls.set_backend(name, dryrun=dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2188: in set_backend
+    cls._set_backend(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2311: in _set_backend
+    super(SubclassBackendMixin, cls)._set_backend(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2224: in _set_backend
+    ok = loader(**kwds)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:626: in _load_backend_mixin
+    return mixin_cls._finalize_backend_mixin(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:421: in _finalize_backend_mixin
+    if detect_wrap_bug(IDENT_2A):
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:380: in detect_wrap_bug
+    if verify(secret, bug_hash):
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:792: in verify
+    return consteq(self._calc_checksum(secret), chk)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <passlib.handlers.bcrypt._BcryptBackend object at 0x000001E34E6FCBC0>
+secret = b'01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345...7890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234'
+
+    def _calc_checksum(self, secret):
+        # bcrypt behavior:
+        #   secret must be bytes
+        #   config must be ascii bytes
+        #   returns ascii bytes
+        secret, ident = self._prepare_digest_args(secret)
+        config = self._get_config(ident)
+        if isinstance(config, unicode):
+            config = config.encode("ascii")
+>       hash = _bcrypt.hashpw(secret, config)
+E       ValueError: password cannot be longer than 72 bytes, truncate manually if necessary (e.g. my_password[:72])
+
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:655: ValueError
+----------------------------- Captured log setup ------------------------------
+WARNING  passlib.handlers.bcrypt:bcrypt.py:622 (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "C:\Users\patriciods\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+____________________ ERROR at setup of test_login_success _____________________
+
+request = <SubRequest 'test_user' for <Coroutine test_login_success>>
+kwargs = {'test_session': <sqlalchemy.ext.asyncio.session.AsyncSession object at 0x000001E34E6FAE40>}
+setup = <function _wrap_async_fixture.<locals>._async_fixture_wrapper.<locals>.setup at 0x000001E34F0D9580>
+
+    @functools.wraps(fixture)
+    def _async_fixture_wrapper(request: SubRequest, **kwargs: Any):
+        func = _perhaps_rebind_fixture_func(
+            fixture, request.instance, fixturedef.unittest
+        )
+        event_loop = kwargs.pop(event_loop_fixture_id)
+    
+        async def setup():
+            res = await func(
+                **_add_kwargs(func, kwargs, event_loop_fixture_id, event_loop, request)
+            )
+            return res
+    
+>       return event_loop.run_until_complete(setup())
+
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\pytest_asyncio\plugin.py:360: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\pytest_asyncio\plugin.py:355: in setup
+    res = await func(
+conftest.py:66: in test_user
+    password_hash=hash_password("testpass123"),
+..\app\auth\service.py:16: in hash_password
+    return pwd_context.hash(password)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\context.py:2258: in hash
+    return record.hash(secret, **kwds)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:779: in hash
+    self.checksum = self._calc_checksum(secret)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:591: in _calc_checksum
+    self._stub_requires_backend()
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2254: in _stub_requires_backend
+    cls.set_backend()
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2156: in set_backend
+    return owner.set_backend(name, dryrun=dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2163: in set_backend
+    return cls.set_backend(name, dryrun=dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2188: in set_backend
+    cls._set_backend(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2311: in _set_backend
+    super(SubclassBackendMixin, cls)._set_backend(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2224: in _set_backend
+    ok = loader(**kwds)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:626: in _load_backend_mixin
+    return mixin_cls._finalize_backend_mixin(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:421: in _finalize_backend_mixin
+    if detect_wrap_bug(IDENT_2A):
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:380: in detect_wrap_bug
+    if verify(secret, bug_hash):
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:792: in verify
+    return consteq(self._calc_checksum(secret), chk)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <passlib.handlers.bcrypt._BcryptBackend object at 0x000001E34E702060>
+secret = b'01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345...7890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234'
+
+    def _calc_checksum(self, secret):
+        # bcrypt behavior:
+        #   secret must be bytes
+        #   config must be ascii bytes
+        #   returns ascii bytes
+        secret, ident = self._prepare_digest_args(secret)
+        config = self._get_config(ident)
+        if isinstance(config, unicode):
+            config = config.encode("ascii")
+>       hash = _bcrypt.hashpw(secret, config)
+E       ValueError: password cannot be longer than 72 bytes, truncate manually if necessary (e.g. my_password[:72])
+
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:655: ValueError
+----------------------------- Captured log setup ------------------------------
+WARNING  passlib.handlers.bcrypt:bcrypt.py:622 (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "C:\Users\patriciods\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+_________________ ERROR at setup of test_login_wrong_password _________________
+
+request = <SubRequest 'test_user' for <Coroutine test_login_wrong_password>>
+kwargs = {'test_session': <sqlalchemy.ext.asyncio.session.AsyncSession object at 0x000001E34E6FC410>}
+setup = <function _wrap_async_fixture.<locals>._async_fixture_wrapper.<locals>.setup at 0x000001E34F0DAB60>
+
+    @functools.wraps(fixture)
+    def _async_fixture_wrapper(request: SubRequest, **kwargs: Any):
+        func = _perhaps_rebind_fixture_func(
+            fixture, request.instance, fixturedef.unittest
+        )
+        event_loop = kwargs.pop(event_loop_fixture_id)
+    
+        async def setup():
+            res = await func(
+                **_add_kwargs(func, kwargs, event_loop_fixture_id, event_loop, request)
+            )
+            return res
+    
+>       return event_loop.run_until_complete(setup())
+
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\pytest_asyncio\plugin.py:360: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\pytest_asyncio\plugin.py:355: in setup
+    res = await func(
+conftest.py:66: in test_user
+    password_hash=hash_password("testpass123"),
+..\app\auth\service.py:16: in hash_password
+    return pwd_context.hash(password)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\context.py:2258: in hash
+    return record.hash(secret, **kwds)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:779: in hash
+    self.checksum = self._calc_checksum(secret)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:591: in _calc_checksum
+    self._stub_requires_backend()
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2254: in _stub_requires_backend
+    cls.set_backend()
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2156: in set_backend
+    return owner.set_backend(name, dryrun=dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2163: in set_backend
+    return cls.set_backend(name, dryrun=dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2188: in set_backend
+    cls._set_backend(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2311: in _set_backend
+    super(SubclassBackendMixin, cls)._set_backend(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2224: in _set_backend
+    ok = loader(**kwds)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:626: in _load_backend_mixin
+    return mixin_cls._finalize_backend_mixin(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:421: in _finalize_backend_mixin
+    if detect_wrap_bug(IDENT_2A):
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:380: in detect_wrap_bug
+    if verify(secret, bug_hash):
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:792: in verify
+    return consteq(self._calc_checksum(secret), chk)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <passlib.handlers.bcrypt._BcryptBackend object at 0x000001E34E702A20>
+secret = b'01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345...7890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234'
+
+    def _calc_checksum(self, secret):
+        # bcrypt behavior:
+        #   secret must be bytes
+        #   config must be ascii bytes
+        #   returns ascii bytes
+        secret, ident = self._prepare_digest_args(secret)
+        config = self._get_config(ident)
+        if isinstance(config, unicode):
+            config = config.encode("ascii")
+>       hash = _bcrypt.hashpw(secret, config)
+E       ValueError: password cannot be longer than 72 bytes, truncate manually if necessary (e.g. my_password[:72])
+
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:655: ValueError
+----------------------------- Captured log setup ------------------------------
+WARNING  passlib.handlers.bcrypt:bcrypt.py:622 (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "C:\Users\patriciods\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+________________________ ERROR at setup of test_get_me ________________________
+
+request = <SubRequest 'test_user' for <Coroutine test_get_me>>
+kwargs = {'test_session': <sqlalchemy.ext.asyncio.session.AsyncSession object at 0x000001E34E702D80>}
+setup = <function _wrap_async_fixture.<locals>._async_fixture_wrapper.<locals>.setup at 0x000001E34F0DB060>
+
+    @functools.wraps(fixture)
+    def _async_fixture_wrapper(request: SubRequest, **kwargs: Any):
+        func = _perhaps_rebind_fixture_func(
+            fixture, request.instance, fixturedef.unittest
+        )
+        event_loop = kwargs.pop(event_loop_fixture_id)
+    
+        async def setup():
+            res = await func(
+                **_add_kwargs(func, kwargs, event_loop_fixture_id, event_loop, request)
+            )
+            return res
+    
+>       return event_loop.run_until_complete(setup())
+
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\pytest_asyncio\plugin.py:360: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\pytest_asyncio\plugin.py:355: in setup
+    res = await func(
+conftest.py:66: in test_user
+    password_hash=hash_password("testpass123"),
+..\app\auth\service.py:16: in hash_password
+    return pwd_context.hash(password)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\context.py:2258: in hash
+    return record.hash(secret, **kwds)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:779: in hash
+    self.checksum = self._calc_checksum(secret)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:591: in _calc_checksum
+    self._stub_requires_backend()
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2254: in _stub_requires_backend
+    cls.set_backend()
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2156: in set_backend
+    return owner.set_backend(name, dryrun=dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2163: in set_backend
+    return cls.set_backend(name, dryrun=dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2188: in set_backend
+    cls._set_backend(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2311: in _set_backend
+    super(SubclassBackendMixin, cls)._set_backend(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2224: in _set_backend
+    ok = loader(**kwds)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:626: in _load_backend_mixin
+    return mixin_cls._finalize_backend_mixin(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:421: in _finalize_backend_mixin
+    if detect_wrap_bug(IDENT_2A):
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:380: in detect_wrap_bug
+    if verify(secret, bug_hash):
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:792: in verify
+    return consteq(self._calc_checksum(secret), chk)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <passlib.handlers.bcrypt._BcryptBackend object at 0x000001E34E703AA0>
+secret = b'01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345...7890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234'
+
+    def _calc_checksum(self, secret):
+        # bcrypt behavior:
+        #   secret must be bytes
+        #   config must be ascii bytes
+        #   returns ascii bytes
+        secret, ident = self._prepare_digest_args(secret)
+        config = self._get_config(ident)
+        if isinstance(config, unicode):
+            config = config.encode("ascii")
+>       hash = _bcrypt.hashpw(secret, config)
+E       ValueError: password cannot be longer than 72 bytes, truncate manually if necessary (e.g. my_password[:72])
+
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:655: ValueError
+----------------------------- Captured log setup ------------------------------
+WARNING  passlib.handlers.bcrypt:bcrypt.py:622 (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "C:\Users\patriciods\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+____________ ERROR at setup of test_send_message_new_conversation _____________
+
+request = <SubRequest 'test_user' for <Coroutine test_send_message_new_conversation>>
+kwargs = {'test_session': <sqlalchemy.ext.asyncio.session.AsyncSession object at 0x000001E34E700170>}
+setup = <function _wrap_async_fixture.<locals>._async_fixture_wrapper.<locals>.setup at 0x000001E34F0DB560>
+
+    @functools.wraps(fixture)
+    def _async_fixture_wrapper(request: SubRequest, **kwargs: Any):
+        func = _perhaps_rebind_fixture_func(
+            fixture, request.instance, fixturedef.unittest
+        )
+        event_loop = kwargs.pop(event_loop_fixture_id)
+    
+        async def setup():
+            res = await func(
+                **_add_kwargs(func, kwargs, event_loop_fixture_id, event_loop, request)
+            )
+            return res
+    
+>       return event_loop.run_until_complete(setup())
+
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\pytest_asyncio\plugin.py:360: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\pytest_asyncio\plugin.py:355: in setup
+    res = await func(
+conftest.py:66: in test_user
+    password_hash=hash_password("testpass123"),
+..\app\auth\service.py:16: in hash_password
+    return pwd_context.hash(password)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\context.py:2258: in hash
+    return record.hash(secret, **kwds)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:779: in hash
+    self.checksum = self._calc_checksum(secret)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:591: in _calc_checksum
+    self._stub_requires_backend()
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2254: in _stub_requires_backend
+    cls.set_backend()
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2156: in set_backend
+    return owner.set_backend(name, dryrun=dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2163: in set_backend
+    return cls.set_backend(name, dryrun=dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2188: in set_backend
+    cls._set_backend(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2311: in _set_backend
+    super(SubclassBackendMixin, cls)._set_backend(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2224: in _set_backend
+    ok = loader(**kwds)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:626: in _load_backend_mixin
+    return mixin_cls._finalize_backend_mixin(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:421: in _finalize_backend_mixin
+    if detect_wrap_bug(IDENT_2A):
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:380: in detect_wrap_bug
+    if verify(secret, bug_hash):
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:792: in verify
+    return consteq(self._calc_checksum(secret), chk)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <passlib.handlers.bcrypt._BcryptBackend object at 0x000001E34E704860>
+secret = b'01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345...7890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234'
+
+    def _calc_checksum(self, secret):
+        # bcrypt behavior:
+        #   secret must be bytes
+        #   config must be ascii bytes
+        #   returns ascii bytes
+        secret, ident = self._prepare_digest_args(secret)
+        config = self._get_config(ident)
+        if isinstance(config, unicode):
+            config = config.encode("ascii")
+>       hash = _bcrypt.hashpw(secret, config)
+E       ValueError: password cannot be longer than 72 bytes, truncate manually if necessary (e.g. my_password[:72])
+
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:655: ValueError
+----------------------------- Captured log setup ------------------------------
+WARNING  passlib.handlers.bcrypt:bcrypt.py:622 (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "C:\Users\patriciods\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+__________ ERROR at setup of test_send_message_existing_conversation __________
+
+request = <SubRequest 'test_user' for <Coroutine test_send_message_existing_conversation>>
+kwargs = {'test_session': <sqlalchemy.ext.asyncio.session.AsyncSession object at 0x000001E34E700DA0>}
+setup = <function _wrap_async_fixture.<locals>._async_fixture_wrapper.<locals>.setup at 0x000001E34F060860>
+
+    @functools.wraps(fixture)
+    def _async_fixture_wrapper(request: SubRequest, **kwargs: Any):
+        func = _perhaps_rebind_fixture_func(
+            fixture, request.instance, fixturedef.unittest
+        )
+        event_loop = kwargs.pop(event_loop_fixture_id)
+    
+        async def setup():
+            res = await func(
+                **_add_kwargs(func, kwargs, event_loop_fixture_id, event_loop, request)
+            )
+            return res
+    
+>       return event_loop.run_until_complete(setup())
+
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\pytest_asyncio\plugin.py:360: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\pytest_asyncio\plugin.py:355: in setup
+    res = await func(
+conftest.py:66: in test_user
+    password_hash=hash_password("testpass123"),
+..\app\auth\service.py:16: in hash_password
+    return pwd_context.hash(password)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\context.py:2258: in hash
+    return record.hash(secret, **kwds)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:779: in hash
+    self.checksum = self._calc_checksum(secret)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:591: in _calc_checksum
+    self._stub_requires_backend()
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2254: in _stub_requires_backend
+    cls.set_backend()
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2156: in set_backend
+    return owner.set_backend(name, dryrun=dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2163: in set_backend
+    return cls.set_backend(name, dryrun=dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2188: in set_backend
+    cls._set_backend(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2311: in _set_backend
+    super(SubclassBackendMixin, cls)._set_backend(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2224: in _set_backend
+    ok = loader(**kwds)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:626: in _load_backend_mixin
+    return mixin_cls._finalize_backend_mixin(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:421: in _finalize_backend_mixin
+    if detect_wrap_bug(IDENT_2A):
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:380: in detect_wrap_bug
+    if verify(secret, bug_hash):
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:792: in verify
+    return consteq(self._calc_checksum(secret), chk)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <passlib.handlers.bcrypt._BcryptBackend object at 0x000001E34E706030>
+secret = b'01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345...7890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234'
+
+    def _calc_checksum(self, secret):
+        # bcrypt behavior:
+        #   secret must be bytes
+        #   config must be ascii bytes
+        #   returns ascii bytes
+        secret, ident = self._prepare_digest_args(secret)
+        config = self._get_config(ident)
+        if isinstance(config, unicode):
+            config = config.encode("ascii")
+>       hash = _bcrypt.hashpw(secret, config)
+E       ValueError: password cannot be longer than 72 bytes, truncate manually if necessary (e.g. my_password[:72])
+
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:655: ValueError
+----------------------------- Captured log setup ------------------------------
+WARNING  passlib.handlers.bcrypt:bcrypt.py:622 (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "C:\Users\patriciods\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+_______________ ERROR at setup of test_list_conversations_empty _______________
+
+request = <SubRequest 'test_user' for <Coroutine test_list_conversations_empty>>
+kwargs = {'test_session': <sqlalchemy.ext.asyncio.session.AsyncSession object at 0x000001E34E703C80>}
+setup = <function _wrap_async_fixture.<locals>._async_fixture_wrapper.<locals>.setup at 0x000001E34F0604A0>
+
+    @functools.wraps(fixture)
+    def _async_fixture_wrapper(request: SubRequest, **kwargs: Any):
+        func = _perhaps_rebind_fixture_func(
+            fixture, request.instance, fixturedef.unittest
+        )
+        event_loop = kwargs.pop(event_loop_fixture_id)
+    
+        async def setup():
+            res = await func(
+                **_add_kwargs(func, kwargs, event_loop_fixture_id, event_loop, request)
+            )
+            return res
+    
+>       return event_loop.run_until_complete(setup())
+
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\pytest_asyncio\plugin.py:360: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\pytest_asyncio\plugin.py:355: in setup
+    res = await func(
+conftest.py:66: in test_user
+    password_hash=hash_password("testpass123"),
+..\app\auth\service.py:16: in hash_password
+    return pwd_context.hash(password)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\context.py:2258: in hash
+    return record.hash(secret, **kwds)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:779: in hash
+    self.checksum = self._calc_checksum(secret)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:591: in _calc_checksum
+    self._stub_requires_backend()
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2254: in _stub_requires_backend
+    cls.set_backend()
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2156: in set_backend
+    return owner.set_backend(name, dryrun=dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2163: in set_backend
+    return cls.set_backend(name, dryrun=dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2188: in set_backend
+    cls._set_backend(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2311: in _set_backend
+    super(SubclassBackendMixin, cls)._set_backend(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2224: in _set_backend
+    ok = loader(**kwds)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:626: in _load_backend_mixin
+    return mixin_cls._finalize_backend_mixin(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:421: in _finalize_backend_mixin
+    if detect_wrap_bug(IDENT_2A):
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:380: in detect_wrap_bug
+    if verify(secret, bug_hash):
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:792: in verify
+    return consteq(self._calc_checksum(secret), chk)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <passlib.handlers.bcrypt._BcryptBackend object at 0x000001E34E7895E0>
+secret = b'01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345...7890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234'
+
+    def _calc_checksum(self, secret):
+        # bcrypt behavior:
+        #   secret must be bytes
+        #   config must be ascii bytes
+        #   returns ascii bytes
+        secret, ident = self._prepare_digest_args(secret)
+        config = self._get_config(ident)
+        if isinstance(config, unicode):
+            config = config.encode("ascii")
+>       hash = _bcrypt.hashpw(secret, config)
+E       ValueError: password cannot be longer than 72 bytes, truncate manually if necessary (e.g. my_password[:72])
+
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:655: ValueError
+----------------------------- Captured log setup ------------------------------
+WARNING  passlib.handlers.bcrypt:bcrypt.py:622 (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "C:\Users\patriciods\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+_____________ ERROR at setup of test_list_conversations_with_data _____________
+
+request = <SubRequest 'test_user' for <Coroutine test_list_conversations_with_data>>
+kwargs = {'test_session': <sqlalchemy.ext.asyncio.session.AsyncSession object at 0x000001E34E702FC0>}
+setup = <function _wrap_async_fixture.<locals>._async_fixture_wrapper.<locals>.setup at 0x000001E34F0620C0>
+
+    @functools.wraps(fixture)
+    def _async_fixture_wrapper(request: SubRequest, **kwargs: Any):
+        func = _perhaps_rebind_fixture_func(
+            fixture, request.instance, fixturedef.unittest
+        )
+        event_loop = kwargs.pop(event_loop_fixture_id)
+    
+        async def setup():
+            res = await func(
+                **_add_kwargs(func, kwargs, event_loop_fixture_id, event_loop, request)
+            )
+            return res
+    
+>       return event_loop.run_until_complete(setup())
+
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\pytest_asyncio\plugin.py:360: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\pytest_asyncio\plugin.py:355: in setup
+    res = await func(
+conftest.py:66: in test_user
+    password_hash=hash_password("testpass123"),
+..\app\auth\service.py:16: in hash_password
+    return pwd_context.hash(password)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\context.py:2258: in hash
+    return record.hash(secret, **kwds)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:779: in hash
+    self.checksum = self._calc_checksum(secret)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:591: in _calc_checksum
+    self._stub_requires_backend()
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2254: in _stub_requires_backend
+    cls.set_backend()
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2156: in set_backend
+    return owner.set_backend(name, dryrun=dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2163: in set_backend
+    return cls.set_backend(name, dryrun=dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2188: in set_backend
+    cls._set_backend(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2311: in _set_backend
+    super(SubclassBackendMixin, cls)._set_backend(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2224: in _set_backend
+    ok = loader(**kwds)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:626: in _load_backend_mixin
+    return mixin_cls._finalize_backend_mixin(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:421: in _finalize_backend_mixin
+    if detect_wrap_bug(IDENT_2A):
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:380: in detect_wrap_bug
+    if verify(secret, bug_hash):
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:792: in verify
+    return consteq(self._calc_checksum(secret), chk)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <passlib.handlers.bcrypt._BcryptBackend object at 0x000001E34E7883B0>
+secret = b'01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345...7890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234'
+
+    def _calc_checksum(self, secret):
+        # bcrypt behavior:
+        #   secret must be bytes
+        #   config must be ascii bytes
+        #   returns ascii bytes
+        secret, ident = self._prepare_digest_args(secret)
+        config = self._get_config(ident)
+        if isinstance(config, unicode):
+            config = config.encode("ascii")
+>       hash = _bcrypt.hashpw(secret, config)
+E       ValueError: password cannot be longer than 72 bytes, truncate manually if necessary (e.g. my_password[:72])
+
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:655: ValueError
+----------------------------- Captured log setup ------------------------------
+WARNING  passlib.handlers.bcrypt:bcrypt.py:622 (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "C:\Users\patriciods\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+___________________ ERROR at setup of test_get_conversation ___________________
+
+request = <SubRequest 'test_user' for <Coroutine test_get_conversation>>
+kwargs = {'test_session': <sqlalchemy.ext.asyncio.session.AsyncSession object at 0x000001E34E78A840>}
+setup = <function _wrap_async_fixture.<locals>._async_fixture_wrapper.<locals>.setup at 0x000001E34F061620>
+
+    @functools.wraps(fixture)
+    def _async_fixture_wrapper(request: SubRequest, **kwargs: Any):
+        func = _perhaps_rebind_fixture_func(
+            fixture, request.instance, fixturedef.unittest
+        )
+        event_loop = kwargs.pop(event_loop_fixture_id)
+    
+        async def setup():
+            res = await func(
+                **_add_kwargs(func, kwargs, event_loop_fixture_id, event_loop, request)
+            )
+            return res
+    
+>       return event_loop.run_until_complete(setup())
+
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\pytest_asyncio\plugin.py:360: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\pytest_asyncio\plugin.py:355: in setup
+    res = await func(
+conftest.py:66: in test_user
+    password_hash=hash_password("testpass123"),
+..\app\auth\service.py:16: in hash_password
+    return pwd_context.hash(password)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\context.py:2258: in hash
+    return record.hash(secret, **kwds)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:779: in hash
+    self.checksum = self._calc_checksum(secret)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:591: in _calc_checksum
+    self._stub_requires_backend()
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2254: in _stub_requires_backend
+    cls.set_backend()
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2156: in set_backend
+    return owner.set_backend(name, dryrun=dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2163: in set_backend
+    return cls.set_backend(name, dryrun=dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2188: in set_backend
+    cls._set_backend(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2311: in _set_backend
+    super(SubclassBackendMixin, cls)._set_backend(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2224: in _set_backend
+    ok = loader(**kwds)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:626: in _load_backend_mixin
+    return mixin_cls._finalize_backend_mixin(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:421: in _finalize_backend_mixin
+    if detect_wrap_bug(IDENT_2A):
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:380: in detect_wrap_bug
+    if verify(secret, bug_hash):
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:792: in verify
+    return consteq(self._calc_checksum(secret), chk)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <passlib.handlers.bcrypt._BcryptBackend object at 0x000001E34E790830>
+secret = b'01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345...7890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234'
+
+    def _calc_checksum(self, secret):
+        # bcrypt behavior:
+        #   secret must be bytes
+        #   config must be ascii bytes
+        #   returns ascii bytes
+        secret, ident = self._prepare_digest_args(secret)
+        config = self._get_config(ident)
+        if isinstance(config, unicode):
+            config = config.encode("ascii")
+>       hash = _bcrypt.hashpw(secret, config)
+E       ValueError: password cannot be longer than 72 bytes, truncate manually if necessary (e.g. my_password[:72])
+
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:655: ValueError
+----------------------------- Captured log setup ------------------------------
+WARNING  passlib.handlers.bcrypt:bcrypt.py:622 (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "C:\Users\patriciods\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+______________ ERROR at setup of test_get_conversation_not_found ______________
+
+request = <SubRequest 'test_user' for <Coroutine test_get_conversation_not_found>>
+kwargs = {'test_session': <sqlalchemy.ext.asyncio.session.AsyncSession object at 0x000001E34E78BD70>}
+setup = <function _wrap_async_fixture.<locals>._async_fixture_wrapper.<locals>.setup at 0x000001E34F0A4720>
+
+    @functools.wraps(fixture)
+    def _async_fixture_wrapper(request: SubRequest, **kwargs: Any):
+        func = _perhaps_rebind_fixture_func(
+            fixture, request.instance, fixturedef.unittest
+        )
+        event_loop = kwargs.pop(event_loop_fixture_id)
+    
+        async def setup():
+            res = await func(
+                **_add_kwargs(func, kwargs, event_loop_fixture_id, event_loop, request)
+            )
+            return res
+    
+>       return event_loop.run_until_complete(setup())
+
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\pytest_asyncio\plugin.py:360: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\pytest_asyncio\plugin.py:355: in setup
+    res = await func(
+conftest.py:66: in test_user
+    password_hash=hash_password("testpass123"),
+..\app\auth\service.py:16: in hash_password
+    return pwd_context.hash(password)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\context.py:2258: in hash
+    return record.hash(secret, **kwds)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:779: in hash
+    self.checksum = self._calc_checksum(secret)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:591: in _calc_checksum
+    self._stub_requires_backend()
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2254: in _stub_requires_backend
+    cls.set_backend()
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2156: in set_backend
+    return owner.set_backend(name, dryrun=dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2163: in set_backend
+    return cls.set_backend(name, dryrun=dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2188: in set_backend
+    cls._set_backend(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2311: in _set_backend
+    super(SubclassBackendMixin, cls)._set_backend(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2224: in _set_backend
+    ok = loader(**kwds)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:626: in _load_backend_mixin
+    return mixin_cls._finalize_backend_mixin(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:421: in _finalize_backend_mixin
+    if detect_wrap_bug(IDENT_2A):
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:380: in detect_wrap_bug
+    if verify(secret, bug_hash):
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:792: in verify
+    return consteq(self._calc_checksum(secret), chk)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <passlib.handlers.bcrypt._BcryptBackend object at 0x000001E34E792930>
+secret = b'01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345...7890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234'
+
+    def _calc_checksum(self, secret):
+        # bcrypt behavior:
+        #   secret must be bytes
+        #   config must be ascii bytes
+        #   returns ascii bytes
+        secret, ident = self._prepare_digest_args(secret)
+        config = self._get_config(ident)
+        if isinstance(config, unicode):
+            config = config.encode("ascii")
+>       hash = _bcrypt.hashpw(secret, config)
+E       ValueError: password cannot be longer than 72 bytes, truncate manually if necessary (e.g. my_password[:72])
+
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:655: ValueError
+----------------------------- Captured log setup ------------------------------
+WARNING  passlib.handlers.bcrypt:bcrypt.py:622 (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "C:\Users\patriciods\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+_________________ ERROR at setup of test_create_conversation __________________
+
+request = <SubRequest 'test_user' for <Coroutine test_create_conversation>>
+kwargs = {'test_session': <sqlalchemy.ext.asyncio.session.AsyncSession object at 0x000001E34E789130>}
+setup = <function _wrap_async_fixture.<locals>._async_fixture_wrapper.<locals>.setup at 0x000001E34F0A5760>
+
+    @functools.wraps(fixture)
+    def _async_fixture_wrapper(request: SubRequest, **kwargs: Any):
+        func = _perhaps_rebind_fixture_func(
+            fixture, request.instance, fixturedef.unittest
+        )
+        event_loop = kwargs.pop(event_loop_fixture_id)
+    
+        async def setup():
+            res = await func(
+                **_add_kwargs(func, kwargs, event_loop_fixture_id, event_loop, request)
+            )
+            return res
+    
+>       return event_loop.run_until_complete(setup())
+
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\pytest_asyncio\plugin.py:360: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\pytest_asyncio\plugin.py:355: in setup
+    res = await func(
+conftest.py:66: in test_user
+    password_hash=hash_password("testpass123"),
+..\app\auth\service.py:16: in hash_password
+    return pwd_context.hash(password)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\context.py:2258: in hash
+    return record.hash(secret, **kwds)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:779: in hash
+    self.checksum = self._calc_checksum(secret)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:591: in _calc_checksum
+    self._stub_requires_backend()
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2254: in _stub_requires_backend
+    cls.set_backend()
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2156: in set_backend
+    return owner.set_backend(name, dryrun=dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2163: in set_backend
+    return cls.set_backend(name, dryrun=dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2188: in set_backend
+    cls._set_backend(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2311: in _set_backend
+    super(SubclassBackendMixin, cls)._set_backend(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2224: in _set_backend
+    ok = loader(**kwds)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:626: in _load_backend_mixin
+    return mixin_cls._finalize_backend_mixin(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:421: in _finalize_backend_mixin
+    if detect_wrap_bug(IDENT_2A):
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:380: in detect_wrap_bug
+    if verify(secret, bug_hash):
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:792: in verify
+    return consteq(self._calc_checksum(secret), chk)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <passlib.handlers.bcrypt._BcryptBackend object at 0x000001E34E7379E0>
+secret = b'01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345...7890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234'
+
+    def _calc_checksum(self, secret):
+        # bcrypt behavior:
+        #   secret must be bytes
+        #   config must be ascii bytes
+        #   returns ascii bytes
+        secret, ident = self._prepare_digest_args(secret)
+        config = self._get_config(ident)
+        if isinstance(config, unicode):
+            config = config.encode("ascii")
+>       hash = _bcrypt.hashpw(secret, config)
+E       ValueError: password cannot be longer than 72 bytes, truncate manually if necessary (e.g. my_password[:72])
+
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:655: ValueError
+----------------------------- Captured log setup ------------------------------
+WARNING  passlib.handlers.bcrypt:bcrypt.py:622 (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "C:\Users\patriciods\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+_________________ ERROR at setup of test_list_services_empty __________________
+
+request = <SubRequest 'test_user' for <Coroutine test_list_services_empty>>
+kwargs = {'test_session': <sqlalchemy.ext.asyncio.session.AsyncSession object at 0x000001E34E790DD0>}
+setup = <function _wrap_async_fixture.<locals>._async_fixture_wrapper.<locals>.setup at 0x000001E34F0A45E0>
+
+    @functools.wraps(fixture)
+    def _async_fixture_wrapper(request: SubRequest, **kwargs: Any):
+        func = _perhaps_rebind_fixture_func(
+            fixture, request.instance, fixturedef.unittest
+        )
+        event_loop = kwargs.pop(event_loop_fixture_id)
+    
+        async def setup():
+            res = await func(
+                **_add_kwargs(func, kwargs, event_loop_fixture_id, event_loop, request)
+            )
+            return res
+    
+>       return event_loop.run_until_complete(setup())
+
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\pytest_asyncio\plugin.py:360: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\pytest_asyncio\plugin.py:355: in setup
+    res = await func(
+conftest.py:66: in test_user
+    password_hash=hash_password("testpass123"),
+..\app\auth\service.py:16: in hash_password
+    return pwd_context.hash(password)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\context.py:2258: in hash
+    return record.hash(secret, **kwds)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:779: in hash
+    self.checksum = self._calc_checksum(secret)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:591: in _calc_checksum
+    self._stub_requires_backend()
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2254: in _stub_requires_backend
+    cls.set_backend()
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2156: in set_backend
+    return owner.set_backend(name, dryrun=dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2163: in set_backend
+    return cls.set_backend(name, dryrun=dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2188: in set_backend
+    cls._set_backend(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2311: in _set_backend
+    super(SubclassBackendMixin, cls)._set_backend(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2224: in _set_backend
+    ok = loader(**kwds)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:626: in _load_backend_mixin
+    return mixin_cls._finalize_backend_mixin(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:421: in _finalize_backend_mixin
+    if detect_wrap_bug(IDENT_2A):
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:380: in detect_wrap_bug
+    if verify(secret, bug_hash):
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:792: in verify
+    return consteq(self._calc_checksum(secret), chk)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <passlib.handlers.bcrypt._BcryptBackend object at 0x000001E34E7888F0>
+secret = b'01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345...7890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234'
+
+    def _calc_checksum(self, secret):
+        # bcrypt behavior:
+        #   secret must be bytes
+        #   config must be ascii bytes
+        #   returns ascii bytes
+        secret, ident = self._prepare_digest_args(secret)
+        config = self._get_config(ident)
+        if isinstance(config, unicode):
+            config = config.encode("ascii")
+>       hash = _bcrypt.hashpw(secret, config)
+E       ValueError: password cannot be longer than 72 bytes, truncate manually if necessary (e.g. my_password[:72])
+
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:655: ValueError
+----------------------------- Captured log setup ------------------------------
+WARNING  passlib.handlers.bcrypt:bcrypt.py:622 (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "C:\Users\patriciods\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+____________________ ERROR at setup of test_list_services _____________________
+
+request = <SubRequest 'test_user' for <Coroutine test_list_services>>
+kwargs = {'test_session': <sqlalchemy.ext.asyncio.session.AsyncSession object at 0x000001E34E791130>}
+setup = <function _wrap_async_fixture.<locals>._async_fixture_wrapper.<locals>.setup at 0x000001E34F0A7060>
+
+    @functools.wraps(fixture)
+    def _async_fixture_wrapper(request: SubRequest, **kwargs: Any):
+        func = _perhaps_rebind_fixture_func(
+            fixture, request.instance, fixturedef.unittest
+        )
+        event_loop = kwargs.pop(event_loop_fixture_id)
+    
+        async def setup():
+            res = await func(
+                **_add_kwargs(func, kwargs, event_loop_fixture_id, event_loop, request)
+            )
+            return res
+    
+>       return event_loop.run_until_complete(setup())
+
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\pytest_asyncio\plugin.py:360: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\pytest_asyncio\plugin.py:355: in setup
+    res = await func(
+conftest.py:66: in test_user
+    password_hash=hash_password("testpass123"),
+..\app\auth\service.py:16: in hash_password
+    return pwd_context.hash(password)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\context.py:2258: in hash
+    return record.hash(secret, **kwds)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:779: in hash
+    self.checksum = self._calc_checksum(secret)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:591: in _calc_checksum
+    self._stub_requires_backend()
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2254: in _stub_requires_backend
+    cls.set_backend()
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2156: in set_backend
+    return owner.set_backend(name, dryrun=dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2163: in set_backend
+    return cls.set_backend(name, dryrun=dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2188: in set_backend
+    cls._set_backend(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2311: in _set_backend
+    super(SubclassBackendMixin, cls)._set_backend(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2224: in _set_backend
+    ok = loader(**kwds)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:626: in _load_backend_mixin
+    return mixin_cls._finalize_backend_mixin(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:421: in _finalize_backend_mixin
+    if detect_wrap_bug(IDENT_2A):
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:380: in detect_wrap_bug
+    if verify(secret, bug_hash):
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:792: in verify
+    return consteq(self._calc_checksum(secret), chk)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <passlib.handlers.bcrypt._BcryptBackend object at 0x000001E34F0B97C0>
+secret = b'01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345...7890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234'
+
+    def _calc_checksum(self, secret):
+        # bcrypt behavior:
+        #   secret must be bytes
+        #   config must be ascii bytes
+        #   returns ascii bytes
+        secret, ident = self._prepare_digest_args(secret)
+        config = self._get_config(ident)
+        if isinstance(config, unicode):
+            config = config.encode("ascii")
+>       hash = _bcrypt.hashpw(secret, config)
+E       ValueError: password cannot be longer than 72 bytes, truncate manually if necessary (e.g. my_password[:72])
+
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:655: ValueError
+----------------------------- Captured log setup ------------------------------
+WARNING  passlib.handlers.bcrypt:bcrypt.py:622 (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "C:\Users\patriciods\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+______________ ERROR at setup of test_create_service_as_analyst _______________
+
+test_session = <sqlalchemy.ext.asyncio.session.AsyncSession object at 0x000001E34E78B260>
+
+    @pytest.fixture
+    async def analyst_user(test_session: AsyncSession) -> User:
+        """Create an analyst user for testing."""
+        from app.auth.service import hash_password
+        user = User(
+            email="analyst@test.com",
+>           password_hash=hash_password("analyst123"),
+            full_name="Analyst User",
+            role=UserRole.ANALYST,
+        )
+
+test_data.py:16: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\app\auth\service.py:16: in hash_password
+    return pwd_context.hash(password)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\context.py:2258: in hash
+    return record.hash(secret, **kwds)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:779: in hash
+    self.checksum = self._calc_checksum(secret)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:591: in _calc_checksum
+    self._stub_requires_backend()
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2254: in _stub_requires_backend
+    cls.set_backend()
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2156: in set_backend
+    return owner.set_backend(name, dryrun=dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2163: in set_backend
+    return cls.set_backend(name, dryrun=dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2188: in set_backend
+    cls._set_backend(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2311: in _set_backend
+    super(SubclassBackendMixin, cls)._set_backend(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2224: in _set_backend
+    ok = loader(**kwds)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:626: in _load_backend_mixin
+    return mixin_cls._finalize_backend_mixin(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:421: in _finalize_backend_mixin
+    if detect_wrap_bug(IDENT_2A):
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:380: in detect_wrap_bug
+    if verify(secret, bug_hash):
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:792: in verify
+    return consteq(self._calc_checksum(secret), chk)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <passlib.handlers.bcrypt._BcryptBackend object at 0x000001E34F0BBB60>
+secret = b'01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345...7890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234'
+
+    def _calc_checksum(self, secret):
+        # bcrypt behavior:
+        #   secret must be bytes
+        #   config must be ascii bytes
+        #   returns ascii bytes
+        secret, ident = self._prepare_digest_args(secret)
+        config = self._get_config(ident)
+        if isinstance(config, unicode):
+            config = config.encode("ascii")
+>       hash = _bcrypt.hashpw(secret, config)
+E       ValueError: password cannot be longer than 72 bytes, truncate manually if necessary (e.g. my_password[:72])
+
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:655: ValueError
+----------------------------- Captured log setup ------------------------------
+WARNING  passlib.handlers.bcrypt:bcrypt.py:622 (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "C:\Users\patriciods\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+__________ ERROR at setup of test_create_service_as_viewer_forbidden __________
+
+request = <SubRequest 'test_user' for <Coroutine test_create_service_as_viewer_forbidden>>
+kwargs = {'test_session': <sqlalchemy.ext.asyncio.session.AsyncSession object at 0x000001E34E7897F0>}
+setup = <function _wrap_async_fixture.<locals>._async_fixture_wrapper.<locals>.setup at 0x000001E34F0DA160>
+
+    @functools.wraps(fixture)
+    def _async_fixture_wrapper(request: SubRequest, **kwargs: Any):
+        func = _perhaps_rebind_fixture_func(
+            fixture, request.instance, fixturedef.unittest
+        )
+        event_loop = kwargs.pop(event_loop_fixture_id)
+    
+        async def setup():
+            res = await func(
+                **_add_kwargs(func, kwargs, event_loop_fixture_id, event_loop, request)
+            )
+            return res
+    
+>       return event_loop.run_until_complete(setup())
+
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\pytest_asyncio\plugin.py:360: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\pytest_asyncio\plugin.py:355: in setup
+    res = await func(
+conftest.py:66: in test_user
+    password_hash=hash_password("testpass123"),
+..\app\auth\service.py:16: in hash_password
+    return pwd_context.hash(password)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\context.py:2258: in hash
+    return record.hash(secret, **kwds)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:779: in hash
+    self.checksum = self._calc_checksum(secret)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:591: in _calc_checksum
+    self._stub_requires_backend()
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2254: in _stub_requires_backend
+    cls.set_backend()
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2156: in set_backend
+    return owner.set_backend(name, dryrun=dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2163: in set_backend
+    return cls.set_backend(name, dryrun=dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2188: in set_backend
+    cls._set_backend(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2311: in _set_backend
+    super(SubclassBackendMixin, cls)._set_backend(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2224: in _set_backend
+    ok = loader(**kwds)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:626: in _load_backend_mixin
+    return mixin_cls._finalize_backend_mixin(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:421: in _finalize_backend_mixin
+    if detect_wrap_bug(IDENT_2A):
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:380: in detect_wrap_bug
+    if verify(secret, bug_hash):
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:792: in verify
+    return consteq(self._calc_checksum(secret), chk)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <passlib.handlers.bcrypt._BcryptBackend object at 0x000001E34E7895E0>
+secret = b'01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345...7890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234'
+
+    def _calc_checksum(self, secret):
+        # bcrypt behavior:
+        #   secret must be bytes
+        #   config must be ascii bytes
+        #   returns ascii bytes
+        secret, ident = self._prepare_digest_args(secret)
+        config = self._get_config(ident)
+        if isinstance(config, unicode):
+            config = config.encode("ascii")
+>       hash = _bcrypt.hashpw(secret, config)
+E       ValueError: password cannot be longer than 72 bytes, truncate manually if necessary (e.g. my_password[:72])
+
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:655: ValueError
+----------------------------- Captured log setup ------------------------------
+WARNING  passlib.handlers.bcrypt:bcrypt.py:622 (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "C:\Users\patriciods\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+_____________________ ERROR at setup of test_get_service ______________________
+
+request = <SubRequest 'test_user' for <Coroutine test_get_service>>
+kwargs = {'test_session': <sqlalchemy.ext.asyncio.session.AsyncSession object at 0x000001E34E789190>}
+setup = <function _wrap_async_fixture.<locals>._async_fixture_wrapper.<locals>.setup at 0x000001E34F0D9BC0>
+
+    @functools.wraps(fixture)
+    def _async_fixture_wrapper(request: SubRequest, **kwargs: Any):
+        func = _perhaps_rebind_fixture_func(
+            fixture, request.instance, fixturedef.unittest
+        )
+        event_loop = kwargs.pop(event_loop_fixture_id)
+    
+        async def setup():
+            res = await func(
+                **_add_kwargs(func, kwargs, event_loop_fixture_id, event_loop, request)
+            )
+            return res
+    
+>       return event_loop.run_until_complete(setup())
+
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\pytest_asyncio\plugin.py:360: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\pytest_asyncio\plugin.py:355: in setup
+    res = await func(
+conftest.py:66: in test_user
+    password_hash=hash_password("testpass123"),
+..\app\auth\service.py:16: in hash_password
+    return pwd_context.hash(password)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\context.py:2258: in hash
+    return record.hash(secret, **kwds)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:779: in hash
+    self.checksum = self._calc_checksum(secret)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:591: in _calc_checksum
+    self._stub_requires_backend()
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2254: in _stub_requires_backend
+    cls.set_backend()
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2156: in set_backend
+    return owner.set_backend(name, dryrun=dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2163: in set_backend
+    return cls.set_backend(name, dryrun=dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2188: in set_backend
+    cls._set_backend(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2311: in _set_backend
+    super(SubclassBackendMixin, cls)._set_backend(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2224: in _set_backend
+    ok = loader(**kwds)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:626: in _load_backend_mixin
+    return mixin_cls._finalize_backend_mixin(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:421: in _finalize_backend_mixin
+    if detect_wrap_bug(IDENT_2A):
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:380: in detect_wrap_bug
+    if verify(secret, bug_hash):
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:792: in verify
+    return consteq(self._calc_checksum(secret), chk)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <passlib.handlers.bcrypt._BcryptBackend object at 0x000001E34E707C50>
+secret = b'01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345...7890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234'
+
+    def _calc_checksum(self, secret):
+        # bcrypt behavior:
+        #   secret must be bytes
+        #   config must be ascii bytes
+        #   returns ascii bytes
+        secret, ident = self._prepare_digest_args(secret)
+        config = self._get_config(ident)
+        if isinstance(config, unicode):
+            config = config.encode("ascii")
+>       hash = _bcrypt.hashpw(secret, config)
+E       ValueError: password cannot be longer than 72 bytes, truncate manually if necessary (e.g. my_password[:72])
+
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:655: ValueError
+----------------------------- Captured log setup ------------------------------
+WARNING  passlib.handlers.bcrypt:bcrypt.py:622 (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "C:\Users\patriciods\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+________________ ERROR at setup of test_get_service_not_found _________________
+
+request = <SubRequest 'test_user' for <Coroutine test_get_service_not_found>>
+kwargs = {'test_session': <sqlalchemy.ext.asyncio.session.AsyncSession object at 0x000001E34E78B890>}
+setup = <function _wrap_async_fixture.<locals>._async_fixture_wrapper.<locals>.setup at 0x000001E34F0DA160>
+
+    @functools.wraps(fixture)
+    def _async_fixture_wrapper(request: SubRequest, **kwargs: Any):
+        func = _perhaps_rebind_fixture_func(
+            fixture, request.instance, fixturedef.unittest
+        )
+        event_loop = kwargs.pop(event_loop_fixture_id)
+    
+        async def setup():
+            res = await func(
+                **_add_kwargs(func, kwargs, event_loop_fixture_id, event_loop, request)
+            )
+            return res
+    
+>       return event_loop.run_until_complete(setup())
+
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\pytest_asyncio\plugin.py:360: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\pytest_asyncio\plugin.py:355: in setup
+    res = await func(
+conftest.py:66: in test_user
+    password_hash=hash_password("testpass123"),
+..\app\auth\service.py:16: in hash_password
+    return pwd_context.hash(password)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\context.py:2258: in hash
+    return record.hash(secret, **kwds)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:779: in hash
+    self.checksum = self._calc_checksum(secret)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:591: in _calc_checksum
+    self._stub_requires_backend()
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2254: in _stub_requires_backend
+    cls.set_backend()
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2156: in set_backend
+    return owner.set_backend(name, dryrun=dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2163: in set_backend
+    return cls.set_backend(name, dryrun=dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2188: in set_backend
+    cls._set_backend(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2311: in _set_backend
+    super(SubclassBackendMixin, cls)._set_backend(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2224: in _set_backend
+    ok = loader(**kwds)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:626: in _load_backend_mixin
+    return mixin_cls._finalize_backend_mixin(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:421: in _finalize_backend_mixin
+    if detect_wrap_bug(IDENT_2A):
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:380: in detect_wrap_bug
+    if verify(secret, bug_hash):
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:792: in verify
+    return consteq(self._calc_checksum(secret), chk)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <passlib.handlers.bcrypt._BcryptBackend object at 0x000001E34E788EC0>
+secret = b'01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345...7890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234'
+
+    def _calc_checksum(self, secret):
+        # bcrypt behavior:
+        #   secret must be bytes
+        #   config must be ascii bytes
+        #   returns ascii bytes
+        secret, ident = self._prepare_digest_args(secret)
+        config = self._get_config(ident)
+        if isinstance(config, unicode):
+            config = config.encode("ascii")
+>       hash = _bcrypt.hashpw(secret, config)
+E       ValueError: password cannot be longer than 72 bytes, truncate manually if necessary (e.g. my_password[:72])
+
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:655: ValueError
+----------------------------- Captured log setup ------------------------------
+WARNING  passlib.handlers.bcrypt:bcrypt.py:622 (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "C:\Users\patriciods\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+_____________________ ERROR at setup of test_create_cost ______________________
+
+test_session = <sqlalchemy.ext.asyncio.session.AsyncSession object at 0x000001E34E7891F0>
+
+    @pytest.fixture
+    async def analyst_user(test_session: AsyncSession) -> User:
+        """Create an analyst user for testing."""
+        from app.auth.service import hash_password
+        user = User(
+            email="analyst@test.com",
+>           password_hash=hash_password("analyst123"),
+            full_name="Analyst User",
+            role=UserRole.ANALYST,
+        )
+
+test_data.py:16: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\app\auth\service.py:16: in hash_password
+    return pwd_context.hash(password)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\context.py:2258: in hash
+    return record.hash(secret, **kwds)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:779: in hash
+    self.checksum = self._calc_checksum(secret)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:591: in _calc_checksum
+    self._stub_requires_backend()
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2254: in _stub_requires_backend
+    cls.set_backend()
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2156: in set_backend
+    return owner.set_backend(name, dryrun=dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2163: in set_backend
+    return cls.set_backend(name, dryrun=dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2188: in set_backend
+    cls._set_backend(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2311: in _set_backend
+    super(SubclassBackendMixin, cls)._set_backend(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2224: in _set_backend
+    ok = loader(**kwds)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:626: in _load_backend_mixin
+    return mixin_cls._finalize_backend_mixin(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:421: in _finalize_backend_mixin
+    if detect_wrap_bug(IDENT_2A):
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:380: in detect_wrap_bug
+    if verify(secret, bug_hash):
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:792: in verify
+    return consteq(self._calc_checksum(secret), chk)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <passlib.handlers.bcrypt._BcryptBackend object at 0x000001E34E6B1AF0>
+secret = b'01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345...7890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234'
+
+    def _calc_checksum(self, secret):
+        # bcrypt behavior:
+        #   secret must be bytes
+        #   config must be ascii bytes
+        #   returns ascii bytes
+        secret, ident = self._prepare_digest_args(secret)
+        config = self._get_config(ident)
+        if isinstance(config, unicode):
+            config = config.encode("ascii")
+>       hash = _bcrypt.hashpw(secret, config)
+E       ValueError: password cannot be longer than 72 bytes, truncate manually if necessary (e.g. my_password[:72])
+
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:655: ValueError
+----------------------------- Captured log setup ------------------------------
+WARNING  passlib.handlers.bcrypt:bcrypt.py:622 (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "C:\Users\patriciods\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+____________________ ERROR at setup of test_create_expense ____________________
+
+test_session = <sqlalchemy.ext.asyncio.session.AsyncSession object at 0x000001E34E700080>
+
+    @pytest.fixture
+    async def analyst_user(test_session: AsyncSession) -> User:
+        """Create an analyst user for testing."""
+        from app.auth.service import hash_password
+        user = User(
+            email="analyst@test.com",
+>           password_hash=hash_password("analyst123"),
+            full_name="Analyst User",
+            role=UserRole.ANALYST,
+        )
+
+test_data.py:16: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\app\auth\service.py:16: in hash_password
+    return pwd_context.hash(password)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\context.py:2258: in hash
+    return record.hash(secret, **kwds)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:779: in hash
+    self.checksum = self._calc_checksum(secret)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:591: in _calc_checksum
+    self._stub_requires_backend()
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2254: in _stub_requires_backend
+    cls.set_backend()
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2156: in set_backend
+    return owner.set_backend(name, dryrun=dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2163: in set_backend
+    return cls.set_backend(name, dryrun=dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2188: in set_backend
+    cls._set_backend(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2311: in _set_backend
+    super(SubclassBackendMixin, cls)._set_backend(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2224: in _set_backend
+    ok = loader(**kwds)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:626: in _load_backend_mixin
+    return mixin_cls._finalize_backend_mixin(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:421: in _finalize_backend_mixin
+    if detect_wrap_bug(IDENT_2A):
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:380: in detect_wrap_bug
+    if verify(secret, bug_hash):
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:792: in verify
+    return consteq(self._calc_checksum(secret), chk)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <passlib.handlers.bcrypt._BcryptBackend object at 0x000001E34E703110>
+secret = b'01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345...7890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234'
+
+    def _calc_checksum(self, secret):
+        # bcrypt behavior:
+        #   secret must be bytes
+        #   config must be ascii bytes
+        #   returns ascii bytes
+        secret, ident = self._prepare_digest_args(secret)
+        config = self._get_config(ident)
+        if isinstance(config, unicode):
+            config = config.encode("ascii")
+>       hash = _bcrypt.hashpw(secret, config)
+E       ValueError: password cannot be longer than 72 bytes, truncate manually if necessary (e.g. my_password[:72])
+
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:655: ValueError
+----------------------------- Captured log setup ------------------------------
+WARNING  passlib.handlers.bcrypt:bcrypt.py:622 (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "C:\Users\patriciods\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+__________________ ERROR at setup of test_list_service_costs __________________
+
+test_session = <sqlalchemy.ext.asyncio.session.AsyncSession object at 0x000001E34E700C20>
+
+    @pytest.fixture
+    async def analyst_user(test_session: AsyncSession) -> User:
+        """Create an analyst user for testing."""
+        from app.auth.service import hash_password
+        user = User(
+            email="analyst@test.com",
+>           password_hash=hash_password("analyst123"),
+            full_name="Analyst User",
+            role=UserRole.ANALYST,
+        )
+
+test_data.py:16: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\app\auth\service.py:16: in hash_password
+    return pwd_context.hash(password)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\context.py:2258: in hash
+    return record.hash(secret, **kwds)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:779: in hash
+    self.checksum = self._calc_checksum(secret)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:591: in _calc_checksum
+    self._stub_requires_backend()
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2254: in _stub_requires_backend
+    cls.set_backend()
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2156: in set_backend
+    return owner.set_backend(name, dryrun=dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2163: in set_backend
+    return cls.set_backend(name, dryrun=dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2188: in set_backend
+    cls._set_backend(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2311: in _set_backend
+    super(SubclassBackendMixin, cls)._set_backend(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2224: in _set_backend
+    ok = loader(**kwds)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:626: in _load_backend_mixin
+    return mixin_cls._finalize_backend_mixin(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:421: in _finalize_backend_mixin
+    if detect_wrap_bug(IDENT_2A):
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:380: in detect_wrap_bug
+    if verify(secret, bug_hash):
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:792: in verify
+    return consteq(self._calc_checksum(secret), chk)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <passlib.handlers.bcrypt._BcryptBackend object at 0x000001E34E6A9220>
+secret = b'01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345...7890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234'
+
+    def _calc_checksum(self, secret):
+        # bcrypt behavior:
+        #   secret must be bytes
+        #   config must be ascii bytes
+        #   returns ascii bytes
+        secret, ident = self._prepare_digest_args(secret)
+        config = self._get_config(ident)
+        if isinstance(config, unicode):
+            config = config.encode("ascii")
+>       hash = _bcrypt.hashpw(secret, config)
+E       ValueError: password cannot be longer than 72 bytes, truncate manually if necessary (e.g. my_password[:72])
+
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:655: ValueError
+----------------------------- Captured log setup ------------------------------
+WARNING  passlib.handlers.bcrypt:bcrypt.py:622 (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "C:\Users\patriciods\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+________________ ERROR at setup of test_list_service_expenses _________________
+
+test_session = <sqlalchemy.ext.asyncio.session.AsyncSession object at 0x000001E34E6A9A30>
+
+    @pytest.fixture
+    async def analyst_user(test_session: AsyncSession) -> User:
+        """Create an analyst user for testing."""
+        from app.auth.service import hash_password
+        user = User(
+            email="analyst@test.com",
+>           password_hash=hash_password("analyst123"),
+            full_name="Analyst User",
+            role=UserRole.ANALYST,
+        )
+
+test_data.py:16: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\app\auth\service.py:16: in hash_password
+    return pwd_context.hash(password)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\context.py:2258: in hash
+    return record.hash(secret, **kwds)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:779: in hash
+    self.checksum = self._calc_checksum(secret)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:591: in _calc_checksum
+    self._stub_requires_backend()
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2254: in _stub_requires_backend
+    cls.set_backend()
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2156: in set_backend
+    return owner.set_backend(name, dryrun=dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2163: in set_backend
+    return cls.set_backend(name, dryrun=dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2188: in set_backend
+    cls._set_backend(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2311: in _set_backend
+    super(SubclassBackendMixin, cls)._set_backend(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2224: in _set_backend
+    ok = loader(**kwds)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:626: in _load_backend_mixin
+    return mixin_cls._finalize_backend_mixin(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:421: in _finalize_backend_mixin
+    if detect_wrap_bug(IDENT_2A):
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:380: in detect_wrap_bug
+    if verify(secret, bug_hash):
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:792: in verify
+    return consteq(self._calc_checksum(secret), chk)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <passlib.handlers.bcrypt._BcryptBackend object at 0x000001E34E736F60>
+secret = b'01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345...7890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234'
+
+    def _calc_checksum(self, secret):
+        # bcrypt behavior:
+        #   secret must be bytes
+        #   config must be ascii bytes
+        #   returns ascii bytes
+        secret, ident = self._prepare_digest_args(secret)
+        config = self._get_config(ident)
+        if isinstance(config, unicode):
+            config = config.encode("ascii")
+>       hash = _bcrypt.hashpw(secret, config)
+E       ValueError: password cannot be longer than 72 bytes, truncate manually if necessary (e.g. my_password[:72])
+
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:655: ValueError
+----------------------------- Captured log setup ------------------------------
+WARNING  passlib.handlers.bcrypt:bcrypt.py:622 (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "C:\Users\patriciods\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+_____________ ERROR at setup of test_get_cost_vs_expense_analysis _____________
+
+test_session = <sqlalchemy.ext.asyncio.session.AsyncSession object at 0x000001E34E707050>
+
+    @pytest.fixture
+    async def analyst_user(test_session: AsyncSession) -> User:
+        """Create an analyst user for testing."""
+        from app.auth.service import hash_password
+        user = User(
+            email="analyst@test.com",
+>           password_hash=hash_password("analyst123"),
+            full_name="Analyst User",
+            role=UserRole.ANALYST,
+        )
+
+test_data.py:16: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\app\auth\service.py:16: in hash_password
+    return pwd_context.hash(password)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\context.py:2258: in hash
+    return record.hash(secret, **kwds)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:779: in hash
+    self.checksum = self._calc_checksum(secret)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:591: in _calc_checksum
+    self._stub_requires_backend()
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2254: in _stub_requires_backend
+    cls.set_backend()
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2156: in set_backend
+    return owner.set_backend(name, dryrun=dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2163: in set_backend
+    return cls.set_backend(name, dryrun=dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2188: in set_backend
+    cls._set_backend(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2311: in _set_backend
+    super(SubclassBackendMixin, cls)._set_backend(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2224: in _set_backend
+    ok = loader(**kwds)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:626: in _load_backend_mixin
+    return mixin_cls._finalize_backend_mixin(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:421: in _finalize_backend_mixin
+    if detect_wrap_bug(IDENT_2A):
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:380: in detect_wrap_bug
+    if verify(secret, bug_hash):
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:792: in verify
+    return consteq(self._calc_checksum(secret), chk)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <passlib.handlers.bcrypt._BcryptBackend object at 0x000001E34E703CE0>
+secret = b'01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345...7890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234'
+
+    def _calc_checksum(self, secret):
+        # bcrypt behavior:
+        #   secret must be bytes
+        #   config must be ascii bytes
+        #   returns ascii bytes
+        secret, ident = self._prepare_digest_args(secret)
+        config = self._get_config(ident)
+        if isinstance(config, unicode):
+            config = config.encode("ascii")
+>       hash = _bcrypt.hashpw(secret, config)
+E       ValueError: password cannot be longer than 72 bytes, truncate manually if necessary (e.g. my_password[:72])
+
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:655: ValueError
+----------------------------- Captured log setup ------------------------------
+WARNING  passlib.handlers.bcrypt:bcrypt.py:622 (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "C:\Users\patriciods\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+__________________ ERROR at setup of test_list_reports_empty __________________
+
+test_session = <sqlalchemy.ext.asyncio.session.AsyncSession object at 0x000001E34E737EF0>
+
+    @pytest.fixture
+    async def analyst_user(test_session: AsyncSession) -> User:
+        """Create an analyst user for testing."""
+        from app.auth.service import hash_password
+        user = User(
+            email="reports_analyst@test.com",
+>           password_hash=hash_password("analyst123"),
+            full_name="Reports Analyst",
+            role=UserRole.ANALYST,
+        )
+
+test_reports.py:16: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\app\auth\service.py:16: in hash_password
+    return pwd_context.hash(password)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\context.py:2258: in hash
+    return record.hash(secret, **kwds)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:779: in hash
+    self.checksum = self._calc_checksum(secret)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:591: in _calc_checksum
+    self._stub_requires_backend()
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2254: in _stub_requires_backend
+    cls.set_backend()
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2156: in set_backend
+    return owner.set_backend(name, dryrun=dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2163: in set_backend
+    return cls.set_backend(name, dryrun=dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2188: in set_backend
+    cls._set_backend(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2311: in _set_backend
+    super(SubclassBackendMixin, cls)._set_backend(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2224: in _set_backend
+    ok = loader(**kwds)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:626: in _load_backend_mixin
+    return mixin_cls._finalize_backend_mixin(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:421: in _finalize_backend_mixin
+    if detect_wrap_bug(IDENT_2A):
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:380: in detect_wrap_bug
+    if verify(secret, bug_hash):
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:792: in verify
+    return consteq(self._calc_checksum(secret), chk)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <passlib.handlers.bcrypt._BcryptBackend object at 0x000001E34E792210>
+secret = b'01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345...7890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234'
+
+    def _calc_checksum(self, secret):
+        # bcrypt behavior:
+        #   secret must be bytes
+        #   config must be ascii bytes
+        #   returns ascii bytes
+        secret, ident = self._prepare_digest_args(secret)
+        config = self._get_config(ident)
+        if isinstance(config, unicode):
+            config = config.encode("ascii")
+>       hash = _bcrypt.hashpw(secret, config)
+E       ValueError: password cannot be longer than 72 bytes, truncate manually if necessary (e.g. my_password[:72])
+
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:655: ValueError
+----------------------------- Captured log setup ------------------------------
+WARNING  passlib.handlers.bcrypt:bcrypt.py:622 (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "C:\Users\patriciods\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+________________ ERROR at setup of test_list_reports_with_data ________________
+
+test_session = <sqlalchemy.ext.asyncio.session.AsyncSession object at 0x000001E34E7017C0>
+
+    @pytest.fixture
+    async def analyst_user(test_session: AsyncSession) -> User:
+        """Create an analyst user for testing."""
+        from app.auth.service import hash_password
+        user = User(
+            email="reports_analyst@test.com",
+>           password_hash=hash_password("analyst123"),
+            full_name="Reports Analyst",
+            role=UserRole.ANALYST,
+        )
+
+test_reports.py:16: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\app\auth\service.py:16: in hash_password
+    return pwd_context.hash(password)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\context.py:2258: in hash
+    return record.hash(secret, **kwds)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:779: in hash
+    self.checksum = self._calc_checksum(secret)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:591: in _calc_checksum
+    self._stub_requires_backend()
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2254: in _stub_requires_backend
+    cls.set_backend()
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2156: in set_backend
+    return owner.set_backend(name, dryrun=dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2163: in set_backend
+    return cls.set_backend(name, dryrun=dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2188: in set_backend
+    cls._set_backend(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2311: in _set_backend
+    super(SubclassBackendMixin, cls)._set_backend(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2224: in _set_backend
+    ok = loader(**kwds)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:626: in _load_backend_mixin
+    return mixin_cls._finalize_backend_mixin(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:421: in _finalize_backend_mixin
+    if detect_wrap_bug(IDENT_2A):
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:380: in detect_wrap_bug
+    if verify(secret, bug_hash):
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:792: in verify
+    return consteq(self._calc_checksum(secret), chk)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <passlib.handlers.bcrypt._BcryptBackend object at 0x000001E34F08A000>
+secret = b'01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345...7890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234'
+
+    def _calc_checksum(self, secret):
+        # bcrypt behavior:
+        #   secret must be bytes
+        #   config must be ascii bytes
+        #   returns ascii bytes
+        secret, ident = self._prepare_digest_args(secret)
+        config = self._get_config(ident)
+        if isinstance(config, unicode):
+            config = config.encode("ascii")
+>       hash = _bcrypt.hashpw(secret, config)
+E       ValueError: password cannot be longer than 72 bytes, truncate manually if necessary (e.g. my_password[:72])
+
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:655: ValueError
+----------------------------- Captured log setup ------------------------------
+WARNING  passlib.handlers.bcrypt:bcrypt.py:622 (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "C:\Users\patriciods\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+______________________ ERROR at setup of test_get_report ______________________
+
+test_session = <sqlalchemy.ext.asyncio.session.AsyncSession object at 0x000001E34E7003E0>
+
+    @pytest.fixture
+    async def analyst_user(test_session: AsyncSession) -> User:
+        """Create an analyst user for testing."""
+        from app.auth.service import hash_password
+        user = User(
+            email="reports_analyst@test.com",
+>           password_hash=hash_password("analyst123"),
+            full_name="Reports Analyst",
+            role=UserRole.ANALYST,
+        )
+
+test_reports.py:16: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\app\auth\service.py:16: in hash_password
+    return pwd_context.hash(password)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\context.py:2258: in hash
+    return record.hash(secret, **kwds)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:779: in hash
+    self.checksum = self._calc_checksum(secret)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:591: in _calc_checksum
+    self._stub_requires_backend()
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2254: in _stub_requires_backend
+    cls.set_backend()
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2156: in set_backend
+    return owner.set_backend(name, dryrun=dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2163: in set_backend
+    return cls.set_backend(name, dryrun=dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2188: in set_backend
+    cls._set_backend(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2311: in _set_backend
+    super(SubclassBackendMixin, cls)._set_backend(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2224: in _set_backend
+    ok = loader(**kwds)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:626: in _load_backend_mixin
+    return mixin_cls._finalize_backend_mixin(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:421: in _finalize_backend_mixin
+    if detect_wrap_bug(IDENT_2A):
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:380: in detect_wrap_bug
+    if verify(secret, bug_hash):
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:792: in verify
+    return consteq(self._calc_checksum(secret), chk)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <passlib.handlers.bcrypt._BcryptBackend object at 0x000001E34E737860>
+secret = b'01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345...7890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234'
+
+    def _calc_checksum(self, secret):
+        # bcrypt behavior:
+        #   secret must be bytes
+        #   config must be ascii bytes
+        #   returns ascii bytes
+        secret, ident = self._prepare_digest_args(secret)
+        config = self._get_config(ident)
+        if isinstance(config, unicode):
+            config = config.encode("ascii")
+>       hash = _bcrypt.hashpw(secret, config)
+E       ValueError: password cannot be longer than 72 bytes, truncate manually if necessary (e.g. my_password[:72])
+
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:655: ValueError
+----------------------------- Captured log setup ------------------------------
+WARNING  passlib.handlers.bcrypt:bcrypt.py:622 (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "C:\Users\patriciods\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+_________________ ERROR at setup of test_get_report_not_found _________________
+
+test_session = <sqlalchemy.ext.asyncio.session.AsyncSession object at 0x000001E34E6F9880>
+
+    @pytest.fixture
+    async def analyst_user(test_session: AsyncSession) -> User:
+        """Create an analyst user for testing."""
+        from app.auth.service import hash_password
+        user = User(
+            email="reports_analyst@test.com",
+>           password_hash=hash_password("analyst123"),
+            full_name="Reports Analyst",
+            role=UserRole.ANALYST,
+        )
+
+test_reports.py:16: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\app\auth\service.py:16: in hash_password
+    return pwd_context.hash(password)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\context.py:2258: in hash
+    return record.hash(secret, **kwds)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:779: in hash
+    self.checksum = self._calc_checksum(secret)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:591: in _calc_checksum
+    self._stub_requires_backend()
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2254: in _stub_requires_backend
+    cls.set_backend()
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2156: in set_backend
+    return owner.set_backend(name, dryrun=dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2163: in set_backend
+    return cls.set_backend(name, dryrun=dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2188: in set_backend
+    cls._set_backend(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2311: in _set_backend
+    super(SubclassBackendMixin, cls)._set_backend(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2224: in _set_backend
+    ok = loader(**kwds)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:626: in _load_backend_mixin
+    return mixin_cls._finalize_backend_mixin(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:421: in _finalize_backend_mixin
+    if detect_wrap_bug(IDENT_2A):
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:380: in detect_wrap_bug
+    if verify(secret, bug_hash):
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:792: in verify
+    return consteq(self._calc_checksum(secret), chk)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <passlib.handlers.bcrypt._BcryptBackend object at 0x000001E34F08BD40>
+secret = b'01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345...7890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234'
+
+    def _calc_checksum(self, secret):
+        # bcrypt behavior:
+        #   secret must be bytes
+        #   config must be ascii bytes
+        #   returns ascii bytes
+        secret, ident = self._prepare_digest_args(secret)
+        config = self._get_config(ident)
+        if isinstance(config, unicode):
+            config = config.encode("ascii")
+>       hash = _bcrypt.hashpw(secret, config)
+E       ValueError: password cannot be longer than 72 bytes, truncate manually if necessary (e.g. my_password[:72])
+
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:655: ValueError
+----------------------------- Captured log setup ------------------------------
+WARNING  passlib.handlers.bcrypt:bcrypt.py:622 (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "C:\Users\patriciods\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+______________ ERROR at setup of test_download_report_not_ready _______________
+
+test_session = <sqlalchemy.ext.asyncio.session.AsyncSession object at 0x000001E34F0881A0>
+
+    @pytest.fixture
+    async def analyst_user(test_session: AsyncSession) -> User:
+        """Create an analyst user for testing."""
+        from app.auth.service import hash_password
+        user = User(
+            email="reports_analyst@test.com",
+>           password_hash=hash_password("analyst123"),
+            full_name="Reports Analyst",
+            role=UserRole.ANALYST,
+        )
+
+test_reports.py:16: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\app\auth\service.py:16: in hash_password
+    return pwd_context.hash(password)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\context.py:2258: in hash
+    return record.hash(secret, **kwds)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:779: in hash
+    self.checksum = self._calc_checksum(secret)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:591: in _calc_checksum
+    self._stub_requires_backend()
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2254: in _stub_requires_backend
+    cls.set_backend()
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2156: in set_backend
+    return owner.set_backend(name, dryrun=dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2163: in set_backend
+    return cls.set_backend(name, dryrun=dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2188: in set_backend
+    cls._set_backend(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2311: in _set_backend
+    super(SubclassBackendMixin, cls)._set_backend(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2224: in _set_backend
+    ok = loader(**kwds)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:626: in _load_backend_mixin
+    return mixin_cls._finalize_backend_mixin(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:421: in _finalize_backend_mixin
+    if detect_wrap_bug(IDENT_2A):
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:380: in detect_wrap_bug
+    if verify(secret, bug_hash):
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:792: in verify
+    return consteq(self._calc_checksum(secret), chk)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <passlib.handlers.bcrypt._BcryptBackend object at 0x000001E34EE71BB0>
+secret = b'01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345...7890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234'
+
+    def _calc_checksum(self, secret):
+        # bcrypt behavior:
+        #   secret must be bytes
+        #   config must be ascii bytes
+        #   returns ascii bytes
+        secret, ident = self._prepare_digest_args(secret)
+        config = self._get_config(ident)
+        if isinstance(config, unicode):
+            config = config.encode("ascii")
+>       hash = _bcrypt.hashpw(secret, config)
+E       ValueError: password cannot be longer than 72 bytes, truncate manually if necessary (e.g. my_password[:72])
+
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:655: ValueError
+----------------------------- Captured log setup ------------------------------
+WARNING  passlib.handlers.bcrypt:bcrypt.py:622 (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "C:\Users\patriciods\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+___________ ERROR at setup of test_generate_report_viewer_forbidden ___________
+
+request = <SubRequest 'test_user' for <Coroutine test_generate_report_viewer_forbidden>>
+kwargs = {'test_session': <sqlalchemy.ext.asyncio.session.AsyncSession object at 0x000001E34E7035F0>}
+setup = <function _wrap_async_fixture.<locals>._async_fixture_wrapper.<locals>.setup at 0x000001E34F0A6700>
+
+    @functools.wraps(fixture)
+    def _async_fixture_wrapper(request: SubRequest, **kwargs: Any):
+        func = _perhaps_rebind_fixture_func(
+            fixture, request.instance, fixturedef.unittest
+        )
+        event_loop = kwargs.pop(event_loop_fixture_id)
+    
+        async def setup():
+            res = await func(
+                **_add_kwargs(func, kwargs, event_loop_fixture_id, event_loop, request)
+            )
+            return res
+    
+>       return event_loop.run_until_complete(setup())
+
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\pytest_asyncio\plugin.py:360: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\pytest_asyncio\plugin.py:355: in setup
+    res = await func(
+conftest.py:66: in test_user
+    password_hash=hash_password("testpass123"),
+..\app\auth\service.py:16: in hash_password
+    return pwd_context.hash(password)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\context.py:2258: in hash
+    return record.hash(secret, **kwds)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:779: in hash
+    self.checksum = self._calc_checksum(secret)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:591: in _calc_checksum
+    self._stub_requires_backend()
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2254: in _stub_requires_backend
+    cls.set_backend()
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2156: in set_backend
+    return owner.set_backend(name, dryrun=dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2163: in set_backend
+    return cls.set_backend(name, dryrun=dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2188: in set_backend
+    cls._set_backend(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2311: in _set_backend
+    super(SubclassBackendMixin, cls)._set_backend(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2224: in _set_backend
+    ok = loader(**kwds)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:626: in _load_backend_mixin
+    return mixin_cls._finalize_backend_mixin(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:421: in _finalize_backend_mixin
+    if detect_wrap_bug(IDENT_2A):
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:380: in detect_wrap_bug
+    if verify(secret, bug_hash):
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:792: in verify
+    return consteq(self._calc_checksum(secret), chk)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <passlib.handlers.bcrypt._BcryptBackend object at 0x000001E34F088170>
+secret = b'01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345...7890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234'
+
+    def _calc_checksum(self, secret):
+        # bcrypt behavior:
+        #   secret must be bytes
+        #   config must be ascii bytes
+        #   returns ascii bytes
+        secret, ident = self._prepare_digest_args(secret)
+        config = self._get_config(ident)
+        if isinstance(config, unicode):
+            config = config.encode("ascii")
+>       hash = _bcrypt.hashpw(secret, config)
+E       ValueError: password cannot be longer than 72 bytes, truncate manually if necessary (e.g. my_password[:72])
+
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:655: ValueError
+----------------------------- Captured log setup ------------------------------
+WARNING  passlib.handlers.bcrypt:bcrypt.py:622 (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "C:\Users\patriciods\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+================================== FAILURES ===================================
+_____________________________ test_register_user ______________________________
+
+client = <httpx.AsyncClient object at 0x000001E34E5D8950>
+
+    @pytest.mark.asyncio
+    async def test_register_user(client: AsyncClient):
+        """Test user registration."""
+>       response = await client.post(
+            "/auth/register",
+            json={
+                "email": "newuser@example.com",
+                "password": "securepass123",
+                "full_name": "New User",
+            },
+        )
+
+test_auth.py:9: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py:1877: in post
+    return await self.request(
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py:1559: in request
+    return await self.send(request, auth=auth, follow_redirects=follow_redirects)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py:1646: in send
+    response = await self._send_handling_auth(
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py:1674: in _send_handling_auth
+    response = await self._send_handling_redirects(
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py:1711: in _send_handling_redirects
+    response = await self._send_single_request(request)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py:1748: in _send_single_request
+    response = await transport.handle_async_request(request)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\asgi.py:162: in handle_async_request
+    await self.app(scope, receive, send)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\fastapi\applications.py:1054: in __call__
+    await super().__call__(scope, receive, send)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\starlette\applications.py:123: in __call__
+    await self.middleware_stack(scope, receive, send)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\starlette\middleware\errors.py:186: in __call__
+    raise exc
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\starlette\middleware\errors.py:164: in __call__
+    await self.app(scope, receive, _send)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\starlette\middleware\cors.py:83: in __call__
+    await self.app(scope, receive, send)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\starlette\middleware\exceptions.py:62: in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\starlette\_exception_handler.py:64: in wrapped_app
+    raise exc
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\starlette\_exception_handler.py:53: in wrapped_app
+    await app(scope, receive, sender)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\starlette\routing.py:762: in __call__
+    await self.middleware_stack(scope, receive, send)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\starlette\routing.py:782: in app
+    await route.handle(scope, receive, send)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\starlette\routing.py:297: in handle
+    await self.app(scope, receive, send)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\starlette\routing.py:77: in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\starlette\_exception_handler.py:64: in wrapped_app
+    raise exc
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\starlette\_exception_handler.py:53: in wrapped_app
+    await app(scope, receive, sender)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\starlette\routing.py:72: in app
+    response = await func(request)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\fastapi\routing.py:299: in app
+    raise e
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\fastapi\routing.py:294: in app
+    raw_response = await run_endpoint_function(
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\fastapi\routing.py:191: in run_endpoint_function
+    return await dependant.call(**values)
+..\app\auth\router.py:37: in register
+    user = await create_user(db, user_data)
+..\app\auth\service.py:34: in create_user
+    password_hash=hash_password(user_data.password),
+..\app\auth\service.py:16: in hash_password
+    return pwd_context.hash(password)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\context.py:2258: in hash
+    return record.hash(secret, **kwds)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:779: in hash
+    self.checksum = self._calc_checksum(secret)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:591: in _calc_checksum
+    self._stub_requires_backend()
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2254: in _stub_requires_backend
+    cls.set_backend()
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2156: in set_backend
+    return owner.set_backend(name, dryrun=dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2163: in set_backend
+    return cls.set_backend(name, dryrun=dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2188: in set_backend
+    cls._set_backend(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2311: in _set_backend
+    super(SubclassBackendMixin, cls)._set_backend(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2224: in _set_backend
+    ok = loader(**kwds)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:626: in _load_backend_mixin
+    return mixin_cls._finalize_backend_mixin(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:421: in _finalize_backend_mixin
+    if detect_wrap_bug(IDENT_2A):
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:380: in detect_wrap_bug
+    if verify(secret, bug_hash):
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:792: in verify
+    return consteq(self._calc_checksum(secret), chk)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <passlib.handlers.bcrypt._BcryptBackend object at 0x000001E34E5D9BB0>
+secret = b'01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345...7890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234'
+
+    def _calc_checksum(self, secret):
+        # bcrypt behavior:
+        #   secret must be bytes
+        #   config must be ascii bytes
+        #   returns ascii bytes
+        secret, ident = self._prepare_digest_args(secret)
+        config = self._get_config(ident)
+        if isinstance(config, unicode):
+            config = config.encode("ascii")
+>       hash = _bcrypt.hashpw(secret, config)
+E       ValueError: password cannot be longer than 72 bytes, truncate manually if necessary (e.g. my_password[:72])
+
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:655: ValueError
+------------------------------ Captured log call ------------------------------
+WARNING  passlib.handlers.bcrypt:bcrypt.py:622 (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "C:\Users\patriciods\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+___________________ TestPasswordHashing.test_hash_password ____________________
+
+self = <tests.test_services.TestPasswordHashing object at 0x000001E34E66C350>
+
+    def test_hash_password(self):
+        """Test password hashing."""
+        password = "mysecretpassword"
+>       hashed = hash_password(password)
+
+test_services.py:56: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\app\auth\service.py:16: in hash_password
+    return pwd_context.hash(password)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\context.py:2258: in hash
+    return record.hash(secret, **kwds)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:779: in hash
+    self.checksum = self._calc_checksum(secret)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:591: in _calc_checksum
+    self._stub_requires_backend()
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2254: in _stub_requires_backend
+    cls.set_backend()
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2156: in set_backend
+    return owner.set_backend(name, dryrun=dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2163: in set_backend
+    return cls.set_backend(name, dryrun=dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2188: in set_backend
+    cls._set_backend(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2311: in _set_backend
+    super(SubclassBackendMixin, cls)._set_backend(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2224: in _set_backend
+    ok = loader(**kwds)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:626: in _load_backend_mixin
+    return mixin_cls._finalize_backend_mixin(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:421: in _finalize_backend_mixin
+    if detect_wrap_bug(IDENT_2A):
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:380: in detect_wrap_bug
+    if verify(secret, bug_hash):
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:792: in verify
+    return consteq(self._calc_checksum(secret), chk)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <passlib.handlers.bcrypt._BcryptBackend object at 0x000001E34F08AF90>
+secret = b'01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345...7890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234'
+
+    def _calc_checksum(self, secret):
+        # bcrypt behavior:
+        #   secret must be bytes
+        #   config must be ascii bytes
+        #   returns ascii bytes
+        secret, ident = self._prepare_digest_args(secret)
+        config = self._get_config(ident)
+        if isinstance(config, unicode):
+            config = config.encode("ascii")
+>       hash = _bcrypt.hashpw(secret, config)
+E       ValueError: password cannot be longer than 72 bytes, truncate manually if necessary (e.g. my_password[:72])
+
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:655: ValueError
+------------------------------ Captured log call ------------------------------
+WARNING  passlib.handlers.bcrypt:bcrypt.py:622 (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "C:\Users\patriciods\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+______________ TestPasswordHashing.test_verify_password_correct _______________
+
+self = <tests.test_services.TestPasswordHashing object at 0x000001E34E66C4A0>
+
+    def test_verify_password_correct(self):
+        """Test verifying correct password."""
+        password = "mysecretpassword"
+>       hashed = hash_password(password)
+
+test_services.py:64: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\app\auth\service.py:16: in hash_password
+    return pwd_context.hash(password)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\context.py:2258: in hash
+    return record.hash(secret, **kwds)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:779: in hash
+    self.checksum = self._calc_checksum(secret)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:591: in _calc_checksum
+    self._stub_requires_backend()
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2254: in _stub_requires_backend
+    cls.set_backend()
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2156: in set_backend
+    return owner.set_backend(name, dryrun=dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2163: in set_backend
+    return cls.set_backend(name, dryrun=dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2188: in set_backend
+    cls._set_backend(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2311: in _set_backend
+    super(SubclassBackendMixin, cls)._set_backend(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2224: in _set_backend
+    ok = loader(**kwds)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:626: in _load_backend_mixin
+    return mixin_cls._finalize_backend_mixin(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:421: in _finalize_backend_mixin
+    if detect_wrap_bug(IDENT_2A):
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:380: in detect_wrap_bug
+    if verify(secret, bug_hash):
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:792: in verify
+    return consteq(self._calc_checksum(secret), chk)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <passlib.handlers.bcrypt._BcryptBackend object at 0x000001E34EE70BF0>
+secret = b'01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345...7890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234'
+
+    def _calc_checksum(self, secret):
+        # bcrypt behavior:
+        #   secret must be bytes
+        #   config must be ascii bytes
+        #   returns ascii bytes
+        secret, ident = self._prepare_digest_args(secret)
+        config = self._get_config(ident)
+        if isinstance(config, unicode):
+            config = config.encode("ascii")
+>       hash = _bcrypt.hashpw(secret, config)
+E       ValueError: password cannot be longer than 72 bytes, truncate manually if necessary (e.g. my_password[:72])
+
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:655: ValueError
+------------------------------ Captured log call ------------------------------
+WARNING  passlib.handlers.bcrypt:bcrypt.py:622 (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "C:\Users\patriciods\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+_____________ TestPasswordHashing.test_verify_password_incorrect ______________
+
+self = <tests.test_services.TestPasswordHashing object at 0x000001E34E66C5F0>
+
+    def test_verify_password_incorrect(self):
+        """Test verifying incorrect password."""
+        password = "mysecretpassword"
+>       hashed = hash_password(password)
+
+test_services.py:71: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\app\auth\service.py:16: in hash_password
+    return pwd_context.hash(password)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\context.py:2258: in hash
+    return record.hash(secret, **kwds)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:779: in hash
+    self.checksum = self._calc_checksum(secret)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:591: in _calc_checksum
+    self._stub_requires_backend()
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2254: in _stub_requires_backend
+    cls.set_backend()
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2156: in set_backend
+    return owner.set_backend(name, dryrun=dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2163: in set_backend
+    return cls.set_backend(name, dryrun=dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2188: in set_backend
+    cls._set_backend(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2311: in _set_backend
+    super(SubclassBackendMixin, cls)._set_backend(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:2224: in _set_backend
+    ok = loader(**kwds)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:626: in _load_backend_mixin
+    return mixin_cls._finalize_backend_mixin(name, dryrun)
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:421: in _finalize_backend_mixin
+    if detect_wrap_bug(IDENT_2A):
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:380: in detect_wrap_bug
+    if verify(secret, bug_hash):
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\utils\handlers.py:792: in verify
+    return consteq(self._calc_checksum(secret), chk)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <passlib.handlers.bcrypt._BcryptBackend object at 0x000001E34EF1D640>
+secret = b'01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345...7890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234'
+
+    def _calc_checksum(self, secret):
+        # bcrypt behavior:
+        #   secret must be bytes
+        #   config must be ascii bytes
+        #   returns ascii bytes
+        secret, ident = self._prepare_digest_args(secret)
+        config = self._get_config(ident)
+        if isinstance(config, unicode):
+            config = config.encode("ascii")
+>       hash = _bcrypt.hashpw(secret, config)
+E       ValueError: password cannot be longer than 72 bytes, truncate manually if necessary (e.g. my_password[:72])
+
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py:655: ValueError
+------------------------------ Captured log call ------------------------------
+WARNING  passlib.handlers.bcrypt:bcrypt.py:622 (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "C:\Users\patriciods\AppData\Local\Programs\Python\Python312\Lib\site-packages\passlib\handlers\bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+============================== warnings summary ===============================
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\pydantic\_internal\_config.py:271
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\pydantic\_internal\_config.py:271
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\pydantic\_internal\_config.py:271
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\pydantic\_internal\_config.py:271
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\pydantic\_internal\_config.py:271
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\pydantic\_internal\_config.py:271
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\pydantic\_internal\_config.py:271
+  C:\Users\patriciods\AppData\Local\Programs\Python\Python312\Lib\site-packages\pydantic\_internal\_config.py:271: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.5/migration/
+    warnings.warn(DEPRECATION_MESSAGE, DeprecationWarning)
+
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\httplib2\auth.py:19
+  C:\Users\patriciods\AppData\Local\Programs\Python\Python312\Lib\site-packages\httplib2\auth.py:19: DeprecationWarning: 'setName' deprecated - use 'set_name'
+    token = pp.Word(tchar).setName("token")
+
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\httplib2\auth.py:20
+  C:\Users\patriciods\AppData\Local\Programs\Python\Python312\Lib\site-packages\httplib2\auth.py:20: DeprecationWarning: 'leaveWhitespace' deprecated - use 'leave_whitespace'
+    token68 = pp.Combine(pp.Word("-._~+/" + pp.nums + pp.alphas) + pp.Optional(pp.Word("=").leaveWhitespace())).setName(
+
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\httplib2\auth.py:20
+  C:\Users\patriciods\AppData\Local\Programs\Python\Python312\Lib\site-packages\httplib2\auth.py:20: DeprecationWarning: 'setName' deprecated - use 'set_name'
+    token68 = pp.Combine(pp.Word("-._~+/" + pp.nums + pp.alphas) + pp.Optional(pp.Word("=").leaveWhitespace())).setName(
+
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\httplib2\auth.py:24
+  C:\Users\patriciods\AppData\Local\Programs\Python\Python312\Lib\site-packages\httplib2\auth.py:24: DeprecationWarning: 'setName' deprecated - use 'set_name'
+    quoted_string = pp.dblQuotedString.copy().setName("quoted-string").setParseAction(unquote)
+
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\httplib2\auth.py:24
+  C:\Users\patriciods\AppData\Local\Programs\Python\Python312\Lib\site-packages\httplib2\auth.py:24: DeprecationWarning: 'setParseAction' deprecated - use 'set_parse_action'
+    quoted_string = pp.dblQuotedString.copy().setName("quoted-string").setParseAction(unquote)
+
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\httplib2\auth.py:25
+  C:\Users\patriciods\AppData\Local\Programs\Python\Python312\Lib\site-packages\httplib2\auth.py:25: DeprecationWarning: 'setName' deprecated - use 'set_name'
+    auth_param_name = token.copy().setName("auth-param-name").addParseAction(downcaseTokens)
+
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\httplib2\auth.py:25
+  C:\Users\patriciods\AppData\Local\Programs\Python\Python312\Lib\site-packages\httplib2\auth.py:25: DeprecationWarning: 'addParseAction' deprecated - use 'add_parse_action'
+    auth_param_name = token.copy().setName("auth-param-name").addParseAction(downcaseTokens)
+
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\httplib2\auth.py:27
+  C:\Users\patriciods\AppData\Local\Programs\Python\Python312\Lib\site-packages\httplib2\auth.py:27: DeprecationWarning: 'delimitedList' deprecated - use 'DelimitedList'
+    params = pp.Dict(pp.delimitedList(pp.Group(auth_param)))
+
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\httplib2\auth.py:33
+  C:\Users\patriciods\AppData\Local\Programs\Python\Python312\Lib\site-packages\httplib2\auth.py:33: DeprecationWarning: 'delimitedList' deprecated - use 'DelimitedList'
+    www_authenticate = pp.delimitedList(pp.Group(challenge))
+
+..\app\chat\llm\gemini_client.py:4
+  C:\Users\patriciods\RAG\chat-analytics-poc\backend\app\chat\llm\gemini_client.py:4: FutureWarning: 
+  
+  All support for the `google.generativeai` package has ended. It will no longer be receiving 
+  updates or bug fixes. Please switch to the `google.genai` package as soon as possible.
+  See README for more details:
+  
+  https://github.com/google-gemini/deprecated-generative-ai-python/blob/main/README.md
+  
+    import google.generativeai as genai
+
+tests/test_services.py::TestJwtHandler::test_create_access_token
+tests/test_services.py::TestJwtHandler::test_decode_access_token
+  C:\Users\patriciods\RAG\chat-analytics-poc\backend\app\auth\jwt_handler.py:20: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    expire = datetime.utcnow() + timedelta(minutes=settings.jwt_expire_minutes)
+
+tests/test_services.py::TestJwtHandler::test_decode_access_token
+tests/test_services.py::TestJwtHandler::test_token_with_expiry
+  C:\Users\patriciods\AppData\Local\Programs\Python\Python312\Lib\site-packages\jose\jwt.py:311: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    now = timegm(datetime.utcnow().utctimetuple())
+
+tests/test_services.py::TestJwtHandler::test_token_with_expiry
+  C:\Users\patriciods\RAG\chat-analytics-poc\backend\app\auth\jwt_handler.py:18: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    expire = datetime.utcnow() + expires_delta
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED test_auth.py::test_register_user - ValueError: password cannot be long...
+FAILED test_services.py::TestPasswordHashing::test_hash_password - ValueError...
+FAILED test_services.py::TestPasswordHashing::test_verify_password_correct - ...
+FAILED test_services.py::TestPasswordHashing::test_verify_password_incorrect
+ERROR test_auth.py::test_register_duplicate_email - ValueError: password cann...
+ERROR test_auth.py::test_login_success - ValueError: password cannot be longe...
+ERROR test_auth.py::test_login_wrong_password - ValueError: password cannot b...
+ERROR test_auth.py::test_get_me - ValueError: password cannot be longer than ...
+ERROR test_chat.py::test_send_message_new_conversation - ValueError: password...
+ERROR test_chat.py::test_send_message_existing_conversation - ValueError: pas...
+ERROR test_chat.py::test_list_conversations_empty - ValueError: password cann...
+ERROR test_chat.py::test_list_conversations_with_data - ValueError: password ...
+ERROR test_chat.py::test_get_conversation - ValueError: password cannot be lo...
+ERROR test_chat.py::test_get_conversation_not_found - ValueError: password ca...
+ERROR test_chat.py::test_create_conversation - ValueError: password cannot be...
+ERROR test_data.py::test_list_services_empty - ValueError: password cannot be...
+ERROR test_data.py::test_list_services - ValueError: password cannot be longe...
+ERROR test_data.py::test_create_service_as_analyst - ValueError: password can...
+ERROR test_data.py::test_create_service_as_viewer_forbidden - ValueError: pas...
+ERROR test_data.py::test_get_service - ValueError: password cannot be longer ...
+ERROR test_data.py::test_get_service_not_found - ValueError: password cannot ...
+ERROR test_data.py::test_create_cost - ValueError: password cannot be longer ...
+ERROR test_data.py::test_create_expense - ValueError: password cannot be long...
+ERROR test_data.py::test_list_service_costs - ValueError: password cannot be ...
+ERROR test_data.py::test_list_service_expenses - ValueError: password cannot ...
+ERROR test_data.py::test_get_cost_vs_expense_analysis - ValueError: password ...
+ERROR test_reports.py::test_list_reports_empty - ValueError: password cannot ...
+ERROR test_reports.py::test_list_reports_with_data - ValueError: password can...
+ERROR test_reports.py::test_get_report - ValueError: password cannot be longe...
+ERROR test_reports.py::test_get_report_not_found - ValueError: password canno...
+ERROR test_reports.py::test_download_report_not_ready - ValueError: password ...
+ERROR test_reports.py::test_generate_report_viewer_forbidden - ValueError: pa...
+============ 4 failed, 11 passed, 22 warnings, 28 errors in 8.23s =============
