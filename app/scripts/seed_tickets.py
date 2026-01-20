@@ -10,19 +10,22 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 
-from app.config.settings import settings
+from app.config import get_settings
 from app.db.models import Base, SupportTicket
+
+settings = get_settings()
 
 
 async def load_tickets():
     """Load tickets from CSV file."""
-    engine = create_async_engine(settings.DATABASE_URL)
+    engine = create_async_engine(settings.database_url)
     async_session = async_sessionmaker(engine, expire_on_commit=False)
 
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
 
-    csv_path = Path(__file__).parent.parent / "customer_support_tickets.csv"
+    # Ruta absoluta al CSV en local (raíz del proyecto)
+    csv_path = Path(__file__).parents[2] / "customer_support_tickets.csv"
 
     async with async_session() as session:
         await session.execute(text("TRUNCATE support_tickets RESTART IDENTITY CASCADE"))

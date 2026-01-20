@@ -153,7 +153,7 @@ JWT_EXPIRE_MINUTES=60
 
 # LLM
 GEMINI_API_KEY=your-api-key
-GEMINI_MODEL=gemini-1.5-flash
+GEMINI_MODEL=gemini-2.0-flash-exp
 
 # CORS
 CORS_ORIGINS=http://localhost:5173,http://localhost:3000

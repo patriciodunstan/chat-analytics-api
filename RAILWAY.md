@@ -48,7 +48,7 @@ JWT_EXPIRE_MINUTES=60
 
 # Google Gemini
 GEMINI_API_KEY=<tu-api-key>
-GEMINI_MODEL=gemini-1.5-flash
+GEMINI_MODEL=gemini-2.0-flash-exp
 
 # CORS (agregar dominio de frontend)
 CORS_ORIGINS=https://tu-frontend.vercel.app,https://tu-dominio.com
