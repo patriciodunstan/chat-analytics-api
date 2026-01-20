@@ -1,5 +1,6 @@
 """Chat service layer with NL2SQL integration."""
 import logging
+import os
 from typing import Optional
 
 from sqlalchemy import select, func
@@ -21,12 +22,21 @@ from app.chat.nl2sql.exceptions import NL2QLError
 
 logger = logging.getLogger(__name__)
 
+# Modo económico: desactiva LLM en detección y usa formateo simple
+# Setea ECONOMICAL_MODE=true en variables de entorno para activar
+ECONOMICAL_MODE = os.getenv("ECONOMICAL_MODE", "false").lower() == "true"
+
 # Inicializar componentes NL2SQL
 query_detector = QueryDetector()
 schema_discovery = SchemaDiscovery(include_internal_tables=False)
 intent_parser = IntentParser()
 sql_generator = SQLGenerator()
 query_executor = QueryExecutor()
+
+# Modo económico: desactiva LLM en detección y formateo
+# Setea ECONOMICAL_MODE=true en variables de entorno
+import os
+ECONOMICAL_MODE = os.getenv("ECONOMICAL_MODE", "false").lower() == "true"
 
 
 async def create_conversation(
@@ -177,14 +187,17 @@ async def _process_with_nl2sql(
 ) -> str:
     """Process message with NL2SQL if it's a data query."""
     try:
-        # Paso 1: Detectar si es query de datos
+        # Paso 1: Detectar si es query de datos (SIN LLM en modo económico)
+        use_llm_detection = not ECONOMICAL_MODE
         is_data_query, confidence, reasoning = await query_detector.is_data_query(
-            user_message
+            user_message,
+            use_llm=use_llm_detection,  # False en modo económico
         )
 
         logger.info(
             f"Query detection: is_data={is_data_query}, "
-            f"confidence={confidence:.2f}, reasoning={reasoning}"
+            f"confidence={confidence:.2f}, reasoning={reasoning}, "
+            f"econ_mode={ECONOMICAL_MODE}"
         )
 
         if not is_data_query or confidence < 0.6:
@@ -225,7 +238,17 @@ async def _process_with_nl2sql(
                 f"Por favor, intenta reformular tu pregunta."
             )
 
-        # Paso 6: Generar respuesta natural
+        # Paso 6: Generar respuesta (SIN LLM en modo económico o resultados grandes)
+        if ECONOMICAL_MODE or result.row_count > 100:
+            # Respuesta simple sin LLM
+            formatted_results = query_executor.format_results_as_markdown_table(result)
+            return f"""## Resultados ({result.row_count} registros)
+
+{formatted_results}
+
+**Resumen:** Se encontraron {result.row_count} registros."""
+
+        # Para resultados pequeños, usar LLM para mejor interpretación
         formatted_results = query_executor.format_results_as_markdown_table(result)
 
         response_prompt = DATA_RESPONSE_PROMPT.format(
