@@ -5,7 +5,8 @@ FROM python:3.11-slim as base
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
     PIP_NO_CACHE_DIR=1 \
-    PIP_DISABLE_PIP_VERSION_CHECK=1
+    PIP_DISABLE_PIP_VERSION_CHECK=1 \
+    PORT=8000
 
 # Crear usuario no-root para seguridad
 RUN groupadd -r appuser && useradd -r -g appuser appuser
@@ -51,6 +52,9 @@ COPY --chown=appuser:appuser . .
 # Crear directorio para reportes generados
 RUN mkdir -p /app/reports_output && chown -R appuser:appuser /app/reports_output
 
+# Dar permisos de ejecución al script de inicio
+RUN chmod +x /app/start.sh
+
 # Cambiar a usuario no-root
 USER appuser
 
@@ -61,5 +65,5 @@ EXPOSE 8000
 HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
     CMD python -c "import httpx; httpx.get('http://localhost:8000/health', timeout=5)" || exit 1
 
-# Comando por defecto
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Comando por defecto - usa script que lee $PORT
+CMD ["/app/start.sh"]
