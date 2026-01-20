@@ -64,7 +64,16 @@ jobs:
             -e DATABASE_URL=sqlite+aiosqlite:///./test.db \
             -e JWT_SECRET=test \
             -e GEMINI_API_KEY=test \
+            -e PORT=8000 \
             chat-analytics-api:test
-          sleep 10
-          curl -f http://localhost:8000/health
+
+          echo "Waiting for container..."
+          sleep 20
+
+          echo "Container logs:"
+          docker logs test
+
+          echo "Testing health..."
+          curl -f http://localhost:8000/health || (docker logs test && exit 1)
+
           docker stop test

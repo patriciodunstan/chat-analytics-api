@@ -115,9 +115,19 @@ jobs:
             -e DATABASE_URL=sqlite+aiosqlite:///./test.db \
             -e JWT_SECRET=test-secret \
             -e GEMINI_API_KEY=test-key \
+            -e PORT=8000 \
             chat-analytics-api:test
-          sleep 10
-          curl -f http://localhost:8000/health || exit 1
+
+          echo "Waiting for container to start..."
+          sleep 20
+
+          echo "Container logs:"
+          docker logs test-container
+
+          echo "Testing health endpoint..."
+          curl -f http://localhost:8000/health || (docker logs test-container && exit 1)
+
+          echo "Health check passed!"
           docker stop test-container
 
   # Job 4: Deploy a Railway (solo en push a main)
