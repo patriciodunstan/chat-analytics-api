@@ -1,5 +1,8 @@
 # Chat Analytics API
 
+[![Deploy](https://github.com/patriciodunstan/chat-analytics-api/actions/workflows/deploy.yml/badge.svg)](https://github.com/patriciodunstan/chat-analytics-api/actions/workflows/deploy.yml)
+[![CI](https://github.com/patriciodunstan/chat-analytics-api/actions/workflows/ci.yml/badge.svg)](https://github.com/patriciodunstan/chat-analytics-api/actions/workflows/ci.yml)
+
 Backend FastAPI para consultas de datos en lenguaje natural con LLM. POC de sistema NL2SQL genérico que se adapta a cualquier base de datos PostgreSQL mediante auto-descubrimiento de esquema.
 
 ---
@@ -12,6 +15,7 @@ Backend FastAPI para consultas de datos en lenguaje natural con LLM. POC de sist
 - **Reportes PDF**: Generación automática con gráficos
 - **Autenticación JWT**: Roles (VIEWER, ANALYST, ADMIN)
 - **API RESTful**: Documentación automática con Swagger/OpenAPI
+- **CI/CD**: GitHub Actions con tests automáticos y deploy a Railway
 
 ---
 
