@@ -8,13 +8,13 @@ from app.main import app
 from app.db.database import Base, get_db
 from app.db.models import User, UserRole
 from app.auth.service import hash_password, create_user_token
-from app.chat.llm import gemini_client
+from app.chat.llm import llm_client
 from unittest.mock import AsyncMock
 
 
-# Mock Gemini LLM
-gemini_client.generate_response = AsyncMock(return_value="This is a mocked LLM response.")
-gemini_client.generate_analysis = AsyncMock(return_value="This is a mocked analysis.")
+# Mock LLM client
+llm_client.generate_response = AsyncMock(return_value="This is a mocked LLM response.")
+llm_client.generate_analysis = AsyncMock(return_value="This is a mocked analysis.")
 
 
 # Test database URL (SQLite for tests)
