@@ -15,8 +15,13 @@ class LLMClient:
     """Client for interacting with GLM-4.6 via Z.AI OpenAI-compatible API."""
 
     def __init__(self):
+        if not settings.llm_api_key:
+            logger.warning("LLM_API_KEY not configured, using dummy client")
+        else:
+            logger.info(f"LLM client initialized: model={settings.llm_model}, base_url={settings.llm_base_url}")
+
         self.client = AsyncOpenAI(
-            api_key=settings.llm_api_key,
+            api_key=settings.llm_api_key or "dummy-key",
             base_url=settings.llm_base_url,
         )
         self.model = settings.llm_model
@@ -51,8 +56,9 @@ class LLMClient:
             )
             return response.choices[0].message.content
         except Exception as e:
-            logger.error(f"LLM API error: {e}")
-            raise
+            logger.error(f"LLM API error: {e}", exc_info=True)
+            # Return a fallback response instead of raising
+            return "Lo siento, hubo un error al procesar tu mensaje. Por favor intenta nuevamente."
 
     async def generate_analysis(
         self,
