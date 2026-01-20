@@ -1,12 +1,11 @@
 # Dockerfile multi-stage para producción optimizada
 FROM python:3.11-slim as base
 
-# Variables de entorno para Python
+# Variables de entorno para Python (sin PORT)
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
     PIP_NO_CACHE_DIR=1 \
-    PIP_DISABLE_PIP_VERSION_CHECK=1 \
-    PORT=8000
+    PIP_DISABLE_PIP_VERSION_CHECK=1
 
 # Crear usuario no-root para seguridad
 RUN groupadd -r appuser && useradd -r -g appuser appuser
@@ -52,8 +51,8 @@ COPY --chown=appuser:appuser . .
 # Crear directorio para reportes generados
 RUN mkdir -p /app/reports_output && chown -R appuser:appuser /app/reports_output
 
-# Dar permisos de ejecución a los scripts de inicio
-RUN chmod +x /app/start.sh /app/entrypoint.py
+# Dar permisos de ejecución solo a start.sh
+RUN chmod +x /app/start.sh
 
 # Cambiar a usuario no-root
 USER appuser
@@ -61,9 +60,9 @@ USER appuser
 # Exponer puerto
 EXPOSE 8000
 
-# Health check (usa PORT env var)
+# Health check (puerto fijo 8000)
 HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
-    CMD python -c "import httpx, os; httpx.get(f'http://localhost:{os.getenv(\"PORT\", \"8000\")}/health', timeout=5)" || exit 1
+    CMD python -c "import httpx; httpx.get('http://localhost:8000/health', timeout=5)" || exit 1
 
-# Comando por defecto - usa start.sh para manejar $PORT correctamente
-CMD ["./start.sh"]
+# Comando por defecto - puerto fijo 8000
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
