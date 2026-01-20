@@ -112,7 +112,7 @@ jobs:
         run: |
           docker build -t chat-analytics-api:test .
           docker run -d --name test-container -p 8000:8000 \
-            -e DATABASE_URL=sqlite+aiosqlite:///./test.db \
+            -e DATABASE_URL=sqlite+aiosqlite:///:memory: \
             -e JWT_SECRET=test-secret \
             -e GEMINI_API_KEY=test-key \
             -e PORT=8000 \
