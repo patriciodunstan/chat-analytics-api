@@ -65,5 +65,5 @@ EXPOSE 8000
 HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
     CMD python -c "import httpx, os; httpx.get(f'http://localhost:{os.getenv(\"PORT\", \"8000\")}/health', timeout=5)" || exit 1
 
-# Comando por defecto - usa entrypoint Python que lee $PORT de forma robusta
-CMD ["python", "/app/entrypoint.py"]
+# Comando por defecto - usa start.sh para manejar $PORT correctamente
+CMD ["./start.sh"]
