@@ -22,6 +22,8 @@ Sigue estos pasos en orden para configurar GitHub Actions + Railway.
 
 📋 **Token copiado**: `_____________________________________________`
 
+aad5c734-112a-41f3-8267-66d6b2276974
+
 ---
 
 ## Paso 2: Vincular Proyecto Railway
