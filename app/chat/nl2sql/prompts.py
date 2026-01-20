@@ -19,12 +19,14 @@ TIPOS DE MENSAJES QUE NO REQUIEREN DATOS:
 MENSAJE DEL USUARIO:
 {user_message}
 
-Responde SOLO con JSON válido:
+IMPORTANTE: Responde UNICAMENTE con JSON válido. Sin texto antes ni después.
+```json
 {{
     "requires_data": true/false,
     "confidence": 0.0-1.0,
     "reasoning": "explicación breve"
 }}
+```
 """
 
 
@@ -43,12 +45,13 @@ calcula las fechas exactas basándote en la fecha actual.
 PREGUNTA DEL USUARIO:
 {user_message}
 
-Responde SOLO con JSON válido:
+IMPORTANTE: Responde UNICAMENTE con JSON válido. Sin texto antes ni después.
+```json
 {{
     "tables": ["tabla1", "tabla2"],
     "select_columns": ["col1", "col2"],
     "aggregations": [
-        {{"func": "SUM/COUNT/AVG/MAX/MIN", "column": "columna", "alias": "nombre"}}
+    {{"func": "SUM/COUNT/AVG/MAX/MIN", "column": "columna", "alias": "nombre"}}
     ],
     "filters": [
         {{"column": "columna", "operator": "=/>/</>=/<=/LIKE/IN/IS NULL/IS NOT NULL", "value": "valor"}}
@@ -69,6 +72,7 @@ Responde SOLO con JSON válido:
     "confidence": 0.0-1.0,
     "reasoning": "explicación del parsing"
 }}
+```
 
 REGLAS IMPORTANTES:
 1. Solo usa tablas y columnas que existen en el esquema

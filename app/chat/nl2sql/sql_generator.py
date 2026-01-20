@@ -97,10 +97,11 @@ class SQLGenerator:
         """Build FROM clause with JOINs."""
         if not intent.tables:
             raise SQLGenerationError("No tables specified in intent.")
-        
-        main_table = self._sanitize_identifier(intent.tables[0])
-        from_parts = [f'"{main_table}']
 
+        main_table = self._sanitize_identifier(intent.tables[0])
+        from_parts = [f'"{main_table}"']
+
+        # Procesar joins explícitos del intent
         for join in intent.joins:
             t1 = self._sanitize_identifier(join.get("table1", ""))
             c1 = self._sanitize_identifier(join.get("col1", ""))
@@ -109,21 +110,213 @@ class SQLGenerator:
 
             if t2 and c1 and c2:
                 from_parts.append(f'LEFT JOIN "{t2}" ON "{t1}"."{c1}" = "{t2}"."{c2}"')
+
+        # Auto-detectar joins cuando hay múltiples tablas sin joins explícitos
         if len(intent.tables) > 1 and not intent.joins:
-            for table_name in intent.tables[1:]:
-                table_info = schema.get_table(table_name)
-                if table_info:
-                    for col in table_info.columns:
-                        if col.is_foreign_key and col.foreign_table in intent.tables:
-                            safe_table = self._sanitize_identifier(table_name)
-                            safe_col = self._sanitize_identifier(col.name)
-                            safe_fk_table = self._sanitize_identifier(col.foreign_table)
-                            safe_fk_col = self._sanitize_identifier(col.foreign_column or "")
-                            from_parts.append(
-                                f'LEFT JOIN "{safe_table}" ON "{safe_fk_table}"."{safe_fk_col}" = "{safe_table}"."{safe_col}"'
-                            )
-                            break
+            join_builder = self._auto_detect_joins(intent.tables, schema)
+            if join_builder:
+                from_parts.append(join_builder)
+            elif len(intent.tables) > 1:
+                # Si no se pueden unir las tablas, advertir y usar solo la primera
+                logger.warning(
+                    f"Multiple tables ({intent.tables}) specified but no valid JOIN found. "
+                    f"Using only first table: {intent.tables[0]}"
+                )
+
         return " ".join(from_parts)
+
+    def _auto_detect_joins(self, tables: list[str], schema: DatabaseSchema) -> str:
+        """
+        Auto-detect y construye JOINs para múltiples tablas en orden correcto.
+
+        Construye los JOINs iterativamente, asegurando que cada tabla se una
+        solo a tablas ya incluidas en la consulta. Maneja:
+        1. FK directa entre tablas en la lista
+        2. FK común a una tabla padre (ej: ambos apuntan a 'equipment')
+        3. Tablas intermedias no incluidas en la lista original
+        """
+        if len(tables) < 2:
+            return ""
+
+        join_parts = []
+        # Tablas ya incluidas en la consulta FROM/JOIN
+        included_tables = {tables[0]}
+        # Tablas pendientes de unir
+        pending_tables = set(tables[1:])
+        # Tablas adicionales que se agregaron como intermediarias
+        extra_tables: set[str] = set()
+
+        max_iterations = len(tables) + 5  # Límite para evitar loops infinitos
+        iteration = 0
+
+        while pending_tables and iteration < max_iterations:
+            iteration += 1
+            joined_this_iteration = False
+
+            # Intentar unir cada tabla pendiente
+            for table_name in list(pending_tables):
+                join_sql = self._find_join_path(
+                    table_name, included_tables | extra_tables, schema
+                )
+                if join_sql:
+                    join_parts.append(join_sql.sql)
+                    # Actualizar conjuntos de tablas
+                    included_tables.add(table_name)
+                    pending_tables.remove(table_name)
+                    # Agregar tablas intermediarias si las hubo
+                    if join_sql.intermediate_tables:
+                        extra_tables.update(join_sql.intermediate_tables)
+                        included_tables.update(join_sql.intermediate_tables)
+                    joined_this_iteration = True
+                    break
+
+            if not joined_this_iteration:
+                # No se pudo unir más tablas
+                if pending_tables:
+                    logger.warning(
+                        f"Could not join tables: {pending_tables}. "
+                        f"No valid join path to included tables: {included_tables}"
+                    )
+                break
+
+        return " ".join(join_parts)
+
+    def _find_join_path(
+        self, target_table: str, valid_sources: set[str], schema: DatabaseSchema
+    ) -> "_JoinSQL | None":
+        """
+        Encuentra cómo unir target_table a alguna tabla en valid_sources.
+
+        Retorna un objeto _JoinSQL con el SQL del JOIN y las tablas intermediarias
+        que se necesitan agregar. Busca en orden:
+        1. FK directa a una tabla en valid_sources
+        2. Tabla padre común que sirva de intermediario
+        """
+        target_info = schema.get_table(target_table)
+        if not target_info:
+            return None
+
+        target_safe = self._sanitize_identifier(target_table)
+
+        # Caso 1: FK directa a una tabla en valid_sources
+        for col in target_info.columns:
+            if col.is_foreign_key and col.foreign_table in valid_sources:
+                source_safe = self._sanitize_identifier(col.foreign_table)
+                fk_col = self._sanitize_identifier(col.foreign_column or "id")
+                local_col = self._sanitize_identifier(col.name)
+
+                return _JoinSQL(
+                    sql=f'LEFT JOIN "{target_safe}" ON "{source_safe}"."{fk_col}" = "{target_safe}"."{local_col}"',
+                    intermediate_tables=set(),
+                )
+
+        # Caso 2: Buscar tabla padre común que sirva de intermediario
+        for source_table in valid_sources:
+            source_info = schema.get_table(source_table)
+            if not source_info:
+                continue
+
+            common_parent = self._find_common_parent_sorted(source_table, target_table, schema)
+            if common_parent:
+                parent_safe = self._sanitize_identifier(common_parent)
+                join_parts = []
+                extra_tables: set[str] = set()
+
+                # Si el padre no está en valid_sources, hay que agregarlo primero
+                if common_parent not in valid_sources:
+                    # Unir source al padre
+                    source_join = self._create_join_to_parent(source_table, common_parent, schema)
+                    if source_join:
+                        join_parts.append(source_join)
+                        extra_tables.add(common_parent)
+                    else:
+                        continue  # No se pudo unir source al padre
+
+                # Unir target al padre
+                target_join = self._create_join_to_parent(target_table, common_parent, schema)
+                if target_join:
+                    join_parts.append(target_join)
+                    return _JoinSQL(
+                        sql=" ".join(join_parts),
+                        intermediate_tables=extra_tables,
+                    )
+
+        return None
+
+    def _create_join_to_parent(
+        self, child_table: str, parent_table: str, schema: DatabaseSchema
+    ) -> str | None:
+        """
+        Crea la cláusula JOIN para unir child_table a parent_table a través de su FK.
+        """
+        child_info = schema.get_table(child_table)
+        if not child_info:
+            return None
+
+        child_safe = self._sanitize_identifier(child_table)
+        parent_safe = self._sanitize_identifier(parent_table)
+
+        for col in child_info.columns:
+            if col.is_foreign_key and col.foreign_table == parent_table:
+                fk_col = self._sanitize_identifier(col.foreign_column or "id")
+                local_col = self._sanitize_identifier(col.name)
+                return f'LEFT JOIN "{child_safe}" ON "{parent_safe}"."{fk_col}" = "{child_safe}"."{local_col}"'
+
+        return None
+
+    def _find_common_parent(
+        self, table1: str, table2: str, schema: DatabaseSchema
+    ) -> str | None:
+        """
+        Encuentra una tabla padre común a través de FKs.
+        Nota: Usa .pop() que es no-determinista. Preferir _find_common_parent_sorted.
+        """
+        t1_info = schema.get_table(table1)
+        t2_info = schema.get_table(table2)
+
+        if not t1_info or not t2_info:
+            return None
+
+        t1_parents = {
+            col.foreign_table for col in t1_info.columns
+            if col.is_foreign_key and col.foreign_table
+        }
+        t2_parents = {
+            col.foreign_table for col in t2_info.columns
+            if col.is_foreign_key and col.foreign_table
+        }
+
+        common = t1_parents & t2_parents
+        return common.pop() if common else None
+
+    def _find_common_parent_sorted(
+        self, table1: str, table2: str, schema: DatabaseSchema
+    ) -> str | None:
+        """
+        Encuentra una tabla padre común de forma determinista.
+        Retorna la primer tabla padre ordenada alfabéticamente.
+        """
+        t1_info = schema.get_table(table1)
+        t2_info = schema.get_table(table2)
+
+        if not t1_info or not t2_info:
+            return None
+
+        t1_parents = {
+            col.foreign_table for col in t1_info.columns
+            if col.is_foreign_key and col.foreign_table
+        }
+        t2_parents = {
+            col.foreign_table for col in t2_info.columns
+            if col.is_foreign_key and col.foreign_table
+        }
+
+        common = t1_parents & t2_parents
+        if not common:
+            return None
+
+        # Retornar la primera tabla padre ordenada alfabéticamente (determinista)
+        return min(common)
 
     def _build_where(
             self,
@@ -225,3 +418,10 @@ class SQLGenerator:
         if intent.date_range and intent.date_range.period_description:
             parts.append(f"Período: {intent.date_range.period_description}")
         return " | ".join(parts)
+
+
+class _JoinSQL:
+    """Resultado de _find_join_path con el SQL y tablas intermediarias."""
+    def __init__(self, sql: str, intermediate_tables: set[str]):
+        self.sql = sql
+        self.intermediate_tables = intermediate_tables
