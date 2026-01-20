@@ -8,7 +8,7 @@ from sqlalchemy.orm import selectinload
 
 from app.db.models import Conversation, Message, MessageRole, User
 from app.chat.schemas import MessageCreate, ConversationCreate
-from app.chat.llm.gemini_client import gemini_client
+from app.chat.llm.client import llm_client
 
 # NL2SQL imports
 from app.chat.nl2sql.detector import QueryDetector
@@ -188,7 +188,7 @@ async def _process_with_nl2sql(
         )
 
         if not is_data_query or confidence < 0.6:
-            return await gemini_client.generate_response(
+            return await llm_client.generate_response(
                 user_message=user_message,
                 conversation_history=conversation_history,
             )
@@ -236,14 +236,14 @@ async def _process_with_nl2sql(
             columns=", ".join(result.column_names),
         )
 
-        return await gemini_client.generate_response(
+        return await llm_client.generate_response(
             user_message=response_prompt,
             conversation_history=[],
         )
 
     except NL2QLError as e:
         logger.error(f"NL2SQL error: {e}")
-        return await gemini_client.generate_response(
+        return await llm_client.generate_response(
             user_message=user_message,
             conversation_history=conversation_history,
             context_data={"error_context": str(e)},
@@ -251,7 +251,7 @@ async def _process_with_nl2sql(
 
     except Exception as e:
         logger.error(f"Unexpected error in NL2SQL: {e}", exc_info=True)
-        return await gemini_client.generate_response(
+        return await llm_client.generate_response(
             user_message=user_message,
             conversation_history=conversation_history,
         )

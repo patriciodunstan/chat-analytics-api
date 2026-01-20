@@ -3,7 +3,7 @@ import logging
 import re
 from typing import Tuple
 
-from app.chat.llm.gemini_client import gemini_client
+from app.chat.llm.client import llm_client
 from app.chat.nl2sql.prompts import DETECTION_PROMPT
 from app.chat.nl2sql.exceptions import QueryDetectionError
 

@@ -1,4 +1,4 @@
 """LLM package."""
-from app.chat.llm.gemini_client import gemini_client, GeminiClient
+from app.chat.llm.client import llm_client, LLMClient
 
-__all__ = ["gemini_client", "GeminiClient"]
+__all__ = ["llm_client", "LLMClient"]
