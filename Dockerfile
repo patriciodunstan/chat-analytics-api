@@ -52,8 +52,8 @@ COPY --chown=appuser:appuser . .
 # Crear directorio para reportes generados
 RUN mkdir -p /app/reports_output && chown -R appuser:appuser /app/reports_output
 
-# Dar permisos de ejecución al script de inicio
-RUN chmod +x /app/start.sh
+# Dar permisos de ejecución a los scripts de inicio
+RUN chmod +x /app/start.sh /app/entrypoint.py
 
 # Cambiar a usuario no-root
 USER appuser
@@ -65,5 +65,5 @@ EXPOSE 8000
 HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
     CMD python -c "import httpx, os; httpx.get(f'http://localhost:{os.getenv(\"PORT\", \"8000\")}/health', timeout=5)" || exit 1
 
-# Comando por defecto - usa script que lee $PORT
-CMD ["/app/start.sh"]
+# Comando por defecto - usa entrypoint Python que lee $PORT de forma robusta
+CMD ["python", "/app/entrypoint.py"]
