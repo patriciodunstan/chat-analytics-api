@@ -5,7 +5,7 @@ import re
 from datetime import datetime
 
 
-from app.chat.llm.gemini_client import gemini_client
+from app.chat.llm.client import llm_client
 from app.chat.nl2sql.schemas import ParsedIntent, DateRange, DatabaseSchema
 from app.chat.nl2sql.prompts import INTENT_PARSING_PROMPT
 from app.chat.nl2sql.exceptions import IntentParsingError
@@ -29,7 +29,7 @@ class IntentParser:
             user_message=message
         )
         try:
-            response = await gemini_client.generate_response(
+            response = await llm_client.generate_response(
                 user_message=prompt,
                 conversation_history=[],
                 context_data={},

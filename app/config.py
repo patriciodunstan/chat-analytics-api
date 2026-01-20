@@ -26,9 +26,10 @@ class Settings(BaseSettings):
     jwt_algorithm: str = "HS256"
     jwt_expire_minutes: int = 60
 
-    # Gemini
-    gemini_api_key: str = ""
-    gemini_model: str = "gemini-1.5-flash"
+    # LLM Configuration (GLM-4.6 via Z.AI)
+    llm_api_key: str = ""
+    llm_model: str = "glm-4.6"
+    llm_base_url: str = "https://api.z.ai/api/paas/v4/"
 
     # CORS
     cors_origins: str = "http://localhost:5173,http://localhost:3000"
