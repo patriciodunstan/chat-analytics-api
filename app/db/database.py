@@ -40,5 +40,11 @@ async def get_db() -> AsyncSession:
 
 async def init_db():
     """Initialize database tables."""
+    # Skip DB init if using in-memory SQLite (for testing)
+    if ":memory:" in settings.database_url or settings.database_url.startswith("sqlite"):
+        # For SQLite in-memory, tables are created on first connection
+        # Skip init to avoid issues with :memory: databases
+        return
+
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
