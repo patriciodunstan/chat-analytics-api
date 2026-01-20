@@ -41,11 +41,15 @@ class Conversation(Base):
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
     title: Mapped[str] = mapped_column(String(255), default="Nueva conversación")
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
-    updated_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime, default=datetime.utcnow, onupdate=datetime.utcnow
+    )
 
     # Relationships
     user: Mapped["User"] = relationship(back_populates="conversations")
-    messages: Mapped[list["Message"]] = relationship(back_populates="conversation", cascade="all, delete-orphan")
+    messages: Mapped[list["Message"]] = relationship(
+        back_populates="conversation", cascade="all, delete-orphan"
+    )
 
 
 class MessageRole(str, enum.Enum):
@@ -71,9 +75,8 @@ class Message(Base):
 
 class ReportType(str, enum.Enum):
     """Types of reports that can be generated."""
-    COST_VS_EXPENSE = "cost_vs_expense"
-    MONTHLY_SUMMARY = "monthly_summary"
-    SERVICE_ANALYSIS = "service_analysis"
+    DATA_SUMMARY = "data_summary"
+    TREND_ANALYSIS = "trend_analysis"
     CUSTOM = "custom"
 
 
@@ -93,7 +96,9 @@ class Report(Base):
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
     title: Mapped[str] = mapped_column(String(255))
     report_type: Mapped[ReportType] = mapped_column(Enum(ReportType))
-    status: Mapped[ReportStatus] = mapped_column(Enum(ReportStatus), default=ReportStatus.PENDING)
+    status: Mapped[ReportStatus] = mapped_column(
+        Enum(ReportStatus), default=ReportStatus.PENDING
+    )
     file_path: Mapped[Optional[str]] = mapped_column(String(500), nullable=True)
     analysis_summary: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
@@ -102,48 +107,90 @@ class Report(Base):
     user: Mapped["User"] = relationship(back_populates="reports")
 
 
-class Service(Base):
-    """Service/product for cost analysis."""
-    __tablename__ = "services"
+# ============================================================
+# MINING DOMAIN MODELS (Dataset 1)
+# ============================================================
 
-    id: Mapped[int] = mapped_column(primary_key=True, index=True)
-    name: Mapped[str] = mapped_column(String(255), unique=True)
-    description: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
-    category: Mapped[str] = mapped_column(String(100), default="general")
+class Equipment(Base):
+    """Equipment/machinery model for maintenance tracking."""
+    __tablename__ = "equipment"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    equipment_id: Mapped[str] = mapped_column(String(20), unique=True, index=True)
+    tipo_maquina: Mapped[str] = mapped_column(String(50))
+    marca: Mapped[Optional[str]] = mapped_column(String(50), nullable=True)
+    modelo: Mapped[Optional[str]] = mapped_column(String(50), nullable=True)
+    ano: Mapped[Optional[int]] = mapped_column(nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
 
-    # Relationships
-    costs: Mapped[list["Cost"]] = relationship(back_populates="service")
-    expenses: Mapped[list["Expense"]] = relationship(back_populates="service")
+    maintenance_events: Mapped[list["MaintenanceEvent"]] = relationship(
+        back_populates="equipment", cascade="all, delete-orphan"
+    )
+    failure_events: Mapped[list["FailureEvent"]] = relationship(
+        back_populates="equipment", cascade="all, delete-orphan"
+    )
 
 
-class Cost(Base):
-    """Cost record for a service."""
-    __tablename__ = "costs"
+class MaintenanceEvent(Base):
+    """Maintenance event model."""
+    __tablename__ = "maintenance_events"
 
-    id: Mapped[int] = mapped_column(primary_key=True, index=True)
-    service_id: Mapped[int] = mapped_column(ForeignKey("services.id"))
-    amount: Mapped[float] = mapped_column(Float)
-    category: Mapped[str] = mapped_column(String(100))
-    description: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
-    date: Mapped[datetime] = mapped_column(DateTime)
+    id: Mapped[int] = mapped_column(primary_key=True)
+    equipment_id: Mapped[str] = mapped_column(String(20), ForeignKey("equipment.equipment_id"))
+    fecha: Mapped[datetime] = mapped_column(DateTime)
+    tipo_intervencion: Mapped[str] = mapped_column(String(20))
+    descripcion_tarea: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    horas_operacion: Mapped[Optional[int]] = mapped_column(nullable=True)
+    costo_total: Mapped[Optional[float]] = mapped_column(nullable=True)
+    duracion_horas: Mapped[Optional[int]] = mapped_column(nullable=True)
+    responsable: Mapped[Optional[str]] = mapped_column(String(50), nullable=True)
+    ubicacion_gps: Mapped[Optional[str]] = mapped_column(String(50), nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
 
-    # Relationships
-    service: Mapped["Service"] = relationship(back_populates="costs")
+    equipment: Mapped["Equipment"] = relationship(back_populates="maintenance_events")
 
 
-class Expense(Base):
-    """Expense record for a service."""
-    __tablename__ = "expenses"
+class FailureEvent(Base):
+    """Failure/breakdown event model."""
+    __tablename__ = "failure_events"
 
-    id: Mapped[int] = mapped_column(primary_key=True, index=True)
-    service_id: Mapped[int] = mapped_column(ForeignKey("services.id"))
-    amount: Mapped[float] = mapped_column(Float)
-    category: Mapped[str] = mapped_column(String(100))
-    description: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
-    date: Mapped[datetime] = mapped_column(DateTime)
+    id: Mapped[int] = mapped_column(primary_key=True)
+    equipment_id: Mapped[str] = mapped_column(String(20), ForeignKey("equipment.equipment_id"))
+    fecha: Mapped[datetime] = mapped_column(DateTime)
+    codigo_falla: Mapped[Optional[str]] = mapped_column(String(20), nullable=True)
+    descripcion_falla: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    causa_raiz: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    horas_operacion: Mapped[Optional[int]] = mapped_column(nullable=True)
+    costo_total: Mapped[Optional[float]] = mapped_column(nullable=True)
+    duracion_horas: Mapped[Optional[int]] = mapped_column(nullable=True)
+    responsable: Mapped[Optional[str]] = mapped_column(String(50), nullable=True)
+    ubicacion_gps: Mapped[Optional[str]] = mapped_column(String(50), nullable=True)
+    impacto: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
 
-    # Relationships
-    service: Mapped["Service"] = relationship(back_populates="expenses")
+    equipment: Mapped["Equipment"] = relationship(back_populates="failure_events")
+
+
+class SupportTicket(Base):
+    """Customer support ticket model."""
+    __tablename__ = "support_tickets"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    ticket_id: Mapped[int] = mapped_column(unique=True, index=True)
+    customer_name: Mapped[Optional[str]] = mapped_column(String(100), nullable=True)
+    customer_email: Mapped[Optional[str]] = mapped_column(String(100), nullable=True)
+    customer_age: Mapped[Optional[int]] = mapped_column(nullable=True)
+    customer_gender: Mapped[Optional[str]] = mapped_column(String(20), nullable=True)
+    product_purchased: Mapped[Optional[str]] = mapped_column(String(100), nullable=True)
+    date_of_purchase: Mapped[Optional[datetime]] = mapped_column(DateTime, nullable=True)
+    ticket_type: Mapped[Optional[str]] = mapped_column(String(50), nullable=True)
+    ticket_subject: Mapped[Optional[str]] = mapped_column(String(100), nullable=True)
+    ticket_description: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    ticket_status: Mapped[Optional[str]] = mapped_column(String(50), nullable=True)
+    resolution: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    ticket_priority: Mapped[Optional[str]] = mapped_column(String(20), nullable=True)
+    ticket_channel: Mapped[Optional[str]] = mapped_column(String(50), nullable=True)
+    first_response_time: Mapped[Optional[datetime]] = mapped_column(DateTime, nullable=True)
+    time_to_resolution: Mapped[Optional[datetime]] = mapped_column(DateTime, nullable=True)
+    customer_satisfaction_rating: Mapped[Optional[float]] = mapped_column(nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)

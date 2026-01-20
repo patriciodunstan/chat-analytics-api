@@ -61,17 +61,17 @@ async def list_conversations(
     limit: int = 20,
 ) -> list[ConversationResponse]:
     """List user's conversations."""
-    conversations = await service.get_user_conversations(
+    conversations, total = await service.get_user_conversations(
         db, current_user, skip, limit
     )
-    
+
     return [
         ConversationResponse(
             id=conv.id,
             title=conv.title,
             created_at=conv.created_at,
             updated_at=conv.updated_at,
-            message_count=len(conv.messages) if conv.messages else 0,
+            message_count=getattr(conv, "_message_count", 0),
         )
         for conv in conversations
     ]

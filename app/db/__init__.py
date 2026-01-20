@@ -1,10 +1,12 @@
 """Database package."""
 from app.db.database import Base, get_db, init_db
+
 from app.db.models import (
     User, UserRole,
     Conversation, Message, MessageRole,
     Report, ReportType, ReportStatus,
-    Service, Cost, Expense,
+    Equipment, MaintenanceEvent, FailureEvent,
+    SupportTicket,
 )
 
 __all__ = [
@@ -12,5 +14,6 @@ __all__ = [
     "User", "UserRole",
     "Conversation", "Message", "MessageRole",
     "Report", "ReportType", "ReportStatus",
-    "Service", "Cost", "Expense",
+    "Equipment", "MaintenanceEvent", "FailureEvent",
+    "SupportTicket",
 ]

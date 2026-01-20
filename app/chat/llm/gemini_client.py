@@ -27,21 +27,21 @@ class GeminiClient:
         """Generate a response to a user message."""
         # Build the prompt
         system_prompt = self._build_system_prompt(context_data)
-        
+
         # Prepare chat history
         chat_history = []
         if conversation_history:
             for msg in conversation_history:
                 role = "user" if msg["role"] == "user" else "model"
                 chat_history.append({"role": role, "parts": [msg["content"]]})
-        
+
         # Create chat session
         chat = self.model.start_chat(history=chat_history)
-        
+
         # Generate response
-        full_prompt = f"{system_prompt}\n\nUser: {user_message}"
+        full_prompt = f"{system_prompt}\n\nUsuario: {user_message}"
         response = chat.send_message(full_prompt)
-        
+
         return response.text
 
     async def generate_analysis(
@@ -51,9 +51,9 @@ class GeminiClient:
     ) -> dict:
         """Generate analysis and recommendations from data."""
         prompt = self._build_analysis_prompt(analysis_type, data)
-        
+
         response = self.model.generate_content(prompt)
-        
+
         return {
             "analysis": response.text,
             "recommendations": self._extract_recommendations(response.text),
@@ -67,30 +67,33 @@ class GeminiClient:
     ) -> AsyncIterator[str]:
         """Stream a response chunk by chunk."""
         system_prompt = self._build_system_prompt(context_data)
-        
+
         chat_history = []
         if conversation_history:
             for msg in conversation_history:
                 role = "user" if msg["role"] == "user" else "model"
                 chat_history.append({"role": role, "parts": [msg["content"]]})
-        
+
         chat = self.model.start_chat(history=chat_history)
-        full_prompt = f"{system_prompt}\n\nUser: {user_message}"
-        
+        full_prompt = f"{system_prompt}\n\nUsuario: {user_message}"
+
         response = chat.send_message(full_prompt, stream=True)
-        
+
         for chunk in response:
             if chunk.text:
                 yield chunk.text
 
     def _build_system_prompt(self, context_data: dict = None) -> str:
         """Build the system prompt with optional context."""
-        base_prompt = """Eres un asistente de análisis empresarial especializado en:
-- Análisis de costos vs gastos
-- Generación de reportes financieros
-- Recomendaciones de optimización
+        base_prompt = """Eres un asistente de análisis de datos empresarial especializado en NL2SQL.
+
+Tu función es ayudar a los usuarios a:
+1. Hacer consultas en lenguaje natural sobre sus datos
+2. Interpretar resultados de consultas SQL
+3. Generar insights y recomendaciones
 
 Responde siempre en español de forma clara y profesional.
+
 Cuando analices datos, proporciona:
 1. Un resumen ejecutivo
 2. Análisis detallado
@@ -100,41 +103,30 @@ Cuando analices datos, proporciona:
         if context_data:
             context_str = f"\n\nDatos de contexto disponibles:\n{context_data}"
             return base_prompt + context_str
-        
+
         return base_prompt
 
     def _build_analysis_prompt(self, analysis_type: str, data: dict) -> str:
         """Build a specific analysis prompt."""
         prompts = {
-            "cost_vs_expense": f"""Analiza los siguientes datos de costos vs gastos:
+            "data_summary": f"""Analiza los siguientes datos:
 
-Costos: {data.get('costs', [])}
-Gastos: {data.get('expenses', [])}
-Servicio: {data.get('service_name', 'N/A')}
-Período: {data.get('period', 'No especificado')}
+{data}
 
 Proporciona:
 1. **Resumen Ejecutivo**: Breve descripción del análisis
-2. **Análisis Comparativo**: Comparación detallada entre costos y gastos
-3. **Tendencias**: Patrones identificados en los datos
-4. **Áreas de Mejora**: Oportunidades de optimización
-5. **Conclusiones**: Hallazgos principales
-6. **Recomendaciones**: Acciones específicas a tomar
+2. **Análisis Detallado**: Interpretación de los datos
+3. **Tendencias**: Patrones identificados
+4. **Conclusiones**: Hallazgos principales
+5. **Recomendaciones**: Acciones específicas a tomar
 
 Formato: Usa Markdown para estructurar la respuesta.""",
 
-            "monthly_summary": f"""Genera un resumen mensual con los siguientes datos:
+            "trend_analysis": f"""Genera un análisis de tendencias con los siguientes datos:
 
-Datos: {data}
+{data}
 
-Incluye métricas clave, comparaciones con períodos anteriores y proyecciones.""",
-
-            "service_analysis": f"""Analiza el rendimiento del servicio:
-
-Servicio: {data.get('service_name')}
-Métricas: {data.get('metrics', {})}
-
-Evalúa eficiencia, rentabilidad y áreas de mejora.""",
+Incluye métricas clave, comparaciones y proyecciones.""",
         }
 
         return prompts.get(analysis_type, f"Analiza los siguientes datos:\n{data}")
@@ -143,7 +135,7 @@ Evalúa eficiencia, rentabilidad y áreas de mejora.""",
         """Extract recommendations from analysis text."""
         recommendations = []
         lines = text.split('\n')
-        
+
         in_recommendations = False
         for line in lines:
             if 'recomendacion' in line.lower() or 'recommendation' in line.lower():
@@ -151,7 +143,7 @@ Evalúa eficiencia, rentabilidad y áreas de mejora.""",
                 continue
             if in_recommendations and line.strip().startswith(('-', '•', '*', '1', '2', '3')):
                 recommendations.append(line.strip().lstrip('-•* 0123456789.'))
-        
+
         return recommendations[:5]  # Return top 5 recommendations
 
 

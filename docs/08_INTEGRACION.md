@@ -1,3 +1,8 @@
+# 08 - Integración en Chat Service
+
+## Archivo a REEMPLAZAR: `app/chat/service.py`
+
+```python
 """Chat service layer with NL2SQL integration."""
 import logging
 from typing import Optional
@@ -17,7 +22,7 @@ from app.chat.nl2sql.intent_parser import IntentParser
 from app.chat.nl2sql.sql_generator import SQLGenerator
 from app.chat.nl2sql.query_executor import QueryExecutor
 from app.chat.nl2sql.prompts import DATA_RESPONSE_PROMPT
-from app.chat.nl2sql.exceptions import NL2QLError
+from app.chat.nl2sql.exceptions import NL2SQLError
 
 logger = logging.getLogger(__name__)
 
@@ -62,33 +67,19 @@ async def get_user_conversations(
     db: AsyncSession, user: User, skip: int = 0, limit: int = 20
 ) -> tuple[list[Conversation], int]:
     """Get all conversations for a user with pagination."""
-    # Subquery para contar mensajes por conversación
-    msg_count = (
-        select(func.count(Message.id))
-        .where(Message.conversation_id == Conversation.id)
-        .correlate(Conversation)
-        .scalar_subquery()
-    )
-
     count_result = await db.execute(
         select(func.count(Conversation.id)).where(Conversation.user_id == user.id)
     )
     total = count_result.scalar() or 0
 
     result = await db.execute(
-        select(Conversation, msg_count.label("message_count"))
+        select(Conversation)
         .where(Conversation.user_id == user.id)
         .order_by(Conversation.updated_at.desc())
         .offset(skip)
         .limit(limit)
     )
-
-    # Adjuntar message_count a cada conversación
-    conversations = []
-    for row in result.all():
-        conv = row[0]
-        conv._message_count = row[1]  # type: ignore
-        conversations.append(conv)
+    conversations = list(result.scalars().all())
 
     return conversations, total
 
@@ -238,10 +229,10 @@ async def _process_with_nl2sql(
 
         return await gemini_client.generate_response(
             user_message=response_prompt,
-            conversation_history=[],
+            conversation_history=None,
         )
 
-    except NL2QLError as e:
+    except NL2SQLError as e:
         logger.error(f"NL2SQL error: {e}")
         return await gemini_client.generate_response(
             user_message=user_message,
@@ -255,3 +246,4 @@ async def _process_with_nl2sql(
             user_message=user_message,
             conversation_history=conversation_history,
         )
+```

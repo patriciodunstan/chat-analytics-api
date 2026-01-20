@@ -90,8 +90,9 @@ class TestEnums:
     
     def test_report_type_values(self):
         """Test ReportType enum values."""
-        assert ReportType.COST_VS_EXPENSE.value == "cost_vs_expense"
-        assert ReportType.MONTHLY_SUMMARY.value == "monthly_summary"
+        assert ReportType.DATA_SUMMARY.value == "data_summary"
+        assert ReportType.TREND_ANALYSIS.value == "trend_analysis"
+        assert ReportType.CUSTOM.value == "custom"
     
     def test_report_status_values(self):
         """Test ReportStatus enum values."""

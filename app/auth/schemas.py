@@ -1,5 +1,5 @@
 """Pydantic schemas for authentication."""
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, ConfigDict
 
 from app.db.models import UserRole
 
@@ -25,8 +25,7 @@ class UserResponse(BaseModel):
     role: UserRole
     is_active: bool
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class TokenResponse(BaseModel):
