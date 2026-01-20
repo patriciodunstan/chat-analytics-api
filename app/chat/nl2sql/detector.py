@@ -93,7 +93,7 @@ class QueryDetector:
         prompt = DETECTION_PROMPT.format(user_message=message)
 
         try:
-            response = await gemini_client.generate_response(
+            response = await llm_client.generate_response(
                 user_message=prompt,
                 conversation_history=[],
                 context_data={},

@@ -6,7 +6,7 @@ from sqlalchemy import select, func
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.db.models import Report, ReportType, ReportStatus, User
-from app.chat.llm import gemini_client
+from app.chat.llm import llm_client
 from app.reports.schemas import ReportRequest
 
 
@@ -46,7 +46,7 @@ async def generate_data_summary_report(
         await db.commit()
 
         # Generate LLM analysis from query results
-        llm_result = await gemini_client.generate_analysis(
+        llm_result = await llm_client.generate_analysis(
             analysis_type="data_summary",
             data=query_result,
         )
