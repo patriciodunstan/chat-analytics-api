@@ -89,8 +89,9 @@ docker-compose logs -f api
 # Tests
 docker-compose exec api pytest
 
-# Seeds
+# Seeds (usuarios + datasets de demo)
 docker-compose exec api python -m app.db.seed
+docker-compose exec api python app/scripts/seed_tickets.py
 
 # Bash
 docker-compose exec api bash

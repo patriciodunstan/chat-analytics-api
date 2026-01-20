@@ -120,16 +120,25 @@ chat-analytics-api/
 ```bash
 # Con Docker
 docker-compose exec api python -m app.db.seed
+docker-compose exec api python app/scripts/seed_tickets.py
 
 # Sin Docker
 python -m app.db.seed
+python app/scripts/seed_tickets.py
+
+# En Railway
+railway run python -m app.db.seed
+railway run python app/scripts/seed_tickets.py
 ```
+
+Ver guía completa: [SEEDS_RAILWAY.md](SEEDS_RAILWAY.md)
 
 ---
 
 ## Documentación
 
 - **[Setup Guide](SETUP.md)**: Guía rápida de instalación y deploy
+- **[Seeds Railway](SEEDS_RAILWAY.md)**: Cómo cargar datos en Railway
 - **[API Reference](docs/API.md)**: Endpoints completos para integración frontend
 - **[Docker Guide](DOCKER.md)**: Setup con contenedores
 - **[Railway Deployment](RAILWAY.md)**: Deploy en producción

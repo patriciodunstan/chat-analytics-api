@@ -154,12 +154,17 @@ railway run python -c "from app.db.database import engine; print('DB OK')"
 ### Ejecutar Seeds (Opcional)
 
 ```bash
-# Seed de datos de demostración
+# Seed de usuarios de prueba
 railway run python -m app.db.seed
 
-# O usar scripts SQL
-railway run psql $DATABASE_URL -f scripts/seed_equipment.sql
+# Seed de equipos (mining domain)
+railway run psql $DATABASE_URL -f app/scripts/seed_equipment.sql
+
+# Seed de tickets (support domain)
+railway run python app/scripts/seed_tickets.py
 ```
+
+**Ver guía completa**: [SEEDS_RAILWAY.md](SEEDS_RAILWAY.md)
 
 ---
 
