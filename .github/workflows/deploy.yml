@@ -149,7 +149,7 @@ jobs:
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
         run: |
-          railway up --detach
+          railway up --detach --service chat-analytics-backend
 
       - name: Wait for deployment
         run: sleep 30
