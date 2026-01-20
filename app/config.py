@@ -1,5 +1,6 @@
 """Application configuration using Pydantic Settings."""
 from functools import lru_cache
+import os
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -19,7 +20,12 @@ class Settings(BaseSettings):
     api_port: int = 8000
 
     # Database
-    database_url: str = "postgresql+asyncpg://postgres:postgres@localhost:5432/chat_analytics"
+    @property
+    def database_url(self) -> str:
+        url = os.getenv("DATABASE_URL", "postgresql+asyncpg://postgres:postgres@localhost:5432/chat_analytics")
+        if url.startswith("postgresql://"):
+            url = url.replace("postgresql://", "postgresql+asyncpg://", 1)
+        return url
 
     # JWT
     jwt_secret: str = "your-super-secret-key-change-in-production"

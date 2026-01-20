@@ -1,0 +1,79 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+
+env:
+  PYTHON_VERSION: "3.11"
+
+jobs:
+  test:
+    name: Tests
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: test_db
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Run tests
+        env:
+          DATABASE_URL: postgresql+asyncpg://postgres:postgres@localhost:5432/test_db
+          JWT_SECRET: test-secret-key
+          GEMINI_API_KEY: test-api-key
+        run: |
+          pytest tests/ -v
+
+  docker:
+    name: Docker Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build image
+        run: docker build -t chat-analytics-api:test .
+
+      - name: Test image
+        run: |
+          docker run -d --name test -p 8000:8000 \
+            -e DATABASE_URL=sqlite+aiosqlite:///./test.db \
+            -e JWT_SECRET=test \
+            -e GEMINI_API_KEY=test \
+            -e PORT=8000 \
+            chat-analytics-api:test
+
+          echo "Waiting for container..."
+          sleep 20
+
+          echo "Container logs:"
+          docker logs test
+
+          echo "Testing health..."
+          curl -f http://localhost:8000/health || (docker logs test && exit 1)
+
+          docker stop test

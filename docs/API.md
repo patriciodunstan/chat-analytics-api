@@ -1,27 +1,43 @@
-# API Reference - Frontend Integration
+# API Reference - Frontend Integration (Estado Actual)
+
+**Versión**: 0.1.0
+**Última actualización**: 2026-01-19
+
+> ℹ️ Esta documentación refleja **únicamente los endpoints implementados** en el código actual.
+
+---
 
 ## Base URL
 
 ```
 Development: http://localhost:8000
-Production:  https://your-api-domain.com
+Production:  https://tu-api-domain.com
 ```
+
+## Swagger Documentation
+
+- **Swagger UI**: http://localhost:8000/docs
+- **ReDoc**: http://localhost:8000/redoc
+- **OpenAPI JSON**: http://localhost:8000/openapi.json
+
+---
 
 ## Authentication
 
 Todos los endpoints (excepto `/auth/register` y `/auth/login`) requieren token JWT en el header:
 
-```
+```http
 Authorization: Bearer <token>
 ```
 
 ---
 
-## Endpoints
+## Endpoints Implementados
 
 ### 1. Authentication (`/auth`)
 
 #### POST /auth/register
+
 Registrar nuevo usuario (rol por defecto: VIEWER)
 
 **Request:**
@@ -42,7 +58,9 @@ Registrar nuevo usuario (rol por defecto: VIEWER)
     "id": 1,
     "email": "user@example.com",
     "full_name": "John Doe",
-    "role": "viewer"
+    "role": "viewer",
+    "is_active": true,
+    "created_at": "2024-01-15T10:30:00Z"
   }
 }
 ```
@@ -50,6 +68,7 @@ Registrar nuevo usuario (rol por defecto: VIEWER)
 ---
 
 #### POST /auth/login
+
 Iniciar sesión
 
 **Request:**
@@ -69,7 +88,9 @@ Iniciar sesión
     "id": 1,
     "email": "user@example.com",
     "full_name": "John Doe",
-    "role": "analyst"
+    "role": "analyst",
+    "is_active": true,
+    "created_at": "2024-01-15T10:30:00Z"
   }
 }
 ```
@@ -77,6 +98,7 @@ Iniciar sesión
 ---
 
 #### GET /auth/me
+
 Obtener usuario actual (requiere token)
 
 **Response (200):**
@@ -96,12 +118,13 @@ Obtener usuario actual (requiere token)
 ### 2. Chat (`/chat`)
 
 #### POST /chat/message
-Enviar mensaje y obtener respuesta del LLM
+
+Enviar mensaje y obtener respuesta del LLM con NL2SQL
 
 **Request:**
 ```json
 {
-  "message": "¿Cuánto gastamos en marketing el mes pasado?",
+  "message": "¿Cuántos equipos fallaron en enero de 2024?",
   "conversation_id": null
 }
 ```
@@ -111,22 +134,19 @@ Enviar mensaje y obtener respuesta del LLM
 **Response (200):**
 ```json
 {
-  "conversation": {
-    "id": 42,
-    "title": "¿Cuánto gastamos en...",
-    "created_at": "2024-01-15T10:30:00Z",
-    "updated_at": "2024-01-15T10:35:00Z"
-  },
+  "conversation_id": 42,
   "user_message": {
     "id": 101,
+    "conversation_id": 42,
     "role": "user",
-    "content": "¿Cuánto gastamos...?",
+    "content": "¿Cuántos equipos fallaron...?",
     "created_at": "2024-01-15T10:30:00Z"
   },
   "assistant_message": {
     "id": 102,
+    "conversation_id": 42,
     "role": "assistant",
-    "content": "En el mes pasado, el departamento de Marketing gastó un total de $45,230...",
+    "content": "En enero de 2024, se registraron 15 fallos en equipos...",
     "created_at": "2024-01-15T10:30:05Z"
   }
 }
@@ -135,6 +155,7 @@ Enviar mensaje y obtener respuesta del LLM
 ---
 
 #### GET /chat/conversations
+
 Listar conversaciones del usuario (paginado)
 
 **Query Params:**
@@ -143,45 +164,44 @@ Listar conversaciones del usuario (paginado)
 
 **Response (200):**
 ```json
-{
-  "items": [
-    {
-      "id": 42,
-      "title": "Análisis de gastos marketing",
-      "created_at": "2024-01-15T10:30:00Z",
-      "updated_at": "2024-01-15T10:35:00Z",
-      "message_count": 8
-    }
-  ],
-  "total": 15,
-  "skip": 0,
-  "limit": 20
-}
+[
+  {
+    "id": 42,
+    "title": "Análisis de fallos en equipos",
+    "created_at": "2024-01-15T10:30:00Z",
+    "updated_at": "2024-01-15T10:35:00Z",
+    "message_count": 8
+  }
+]
 ```
 
 ---
 
 #### GET /chat/conversations/{conversation_id}
+
 Obtener conversación con todos sus mensajes
 
 **Response (200):**
 ```json
 {
   "id": 42,
-  "title": "Análisis de gastos marketing",
+  "title": "Análisis de fallos en equipos",
   "created_at": "2024-01-15T10:30:00Z",
   "updated_at": "2024-01-15T10:35:00Z",
+  "message_count": 8,
   "messages": [
     {
       "id": 101,
+      "conversation_id": 42,
       "role": "user",
-      "content": "¿Cuánto gastamos...?",
+      "content": "¿Cuántos equipos...?",
       "created_at": "2024-01-15T10:30:00Z"
     },
     {
       "id": 102,
+      "conversation_id": 42,
       "role": "assistant",
-      "content": "En el mes pasado...",
+      "content": "En enero de 2024...",
       "created_at": "2024-01-15T10:30:05Z"
     }
   ]
@@ -191,6 +211,7 @@ Obtener conversación con todos sus mensajes
 ---
 
 #### POST /chat/conversations
+
 Crear nueva conversación
 
 **Request:**
@@ -206,222 +227,40 @@ Crear nueva conversación
   "id": 43,
   "title": "Análisis Q4 2024",
   "created_at": "2024-01-15T11:00:00Z",
-  "updated_at": "2024-01-15T11:00:00Z"
+  "updated_at": "2024-01-15T11:00:00Z",
+  "message_count": 0
 }
 ```
 
 ---
 
-### 3. Data (`/data`)
+### 3. Reports (`/reports`)
 
-> **Roles requeridos**: `analyst` o `admin` para endpoints marcados
-
-#### GET /data/services
-Listar todos los servicios
-
-**Query Params:**
-- `skip`: Default 0
-- `limit`: Default 100
-
-**Response (200):**
-```json
-[
-  {
-    "id": 1,
-    "name": "Cloud Hosting",
-    "description": "Servicios de infraestructura en la nube",
-    "category": "Infrastructure",
-    "created_at": "2024-01-01T00:00:00Z"
-  }
-]
-```
-
----
-
-#### POST /data/services
-Crear nuevo servicio `[analyst, admin]`
-
-**Request:**
-```json
-{
-  "name": "Marketing Digital",
-  "description": "Campañas publicitarias online",
-  "category": "Marketing"
-}
-```
-
-**Response (201):**
-```json
-{
-  "id": 6,
-  "name": "Marketing Digital",
-  "description": "Campañas publicitarias online",
-  "category": "Marketing",
-  "created_at": "2024-01-15T11:00:00Z"
-}
-```
-
----
-
-#### GET /data/services/{service_id}
-Obtener servicio por ID
-
-**Response (200):**
-```json
-{
-  "id": 1,
-  "name": "Cloud Hosting",
-  "description": "Servicios de infraestructura en la nube",
-  "category": "Infrastructure",
-  "created_at": "2024-01-01T00:00:00Z"
-}
-```
-
----
-
-#### GET /data/services/{service_id}/costs
-Obtener costos de un servicio `[analyst, admin]`
-
-**Query Params:**
-- `start_date`: ISO 8601 date (opcional)
-- `end_date`: ISO 8601 date (opcional)
-
-**Response (200):**
-```json
-[
-  {
-    "id": 1,
-    "service_id": 1,
-    "amount": 1500.00,
-    "category": "Infrastructure",
-    "description": "Servidor mensual",
-    "date": "2024-01-15T00:00:00Z"
-  }
-]
-```
-
----
-
-#### POST /data/costs
-Crear nuevo registro de costo `[analyst, admin]`
-
-**Request:**
-```json
-{
-  "service_id": 1,
-  "amount": 1500.00,
-  "category": "Infrastructure",
-  "description": "Servidor mensual",
-  "date": "2024-01-15"
-}
-```
-
-**Response (201):**
-```json
-{
-  "id": 45,
-  "service_id": 1,
-  "amount": 1500.00,
-  "category": "Infrastructure",
-  "description": "Servidor mensual",
-  "date": "2024-01-15T00:00:00Z"
-}
-```
-
----
-
-#### GET /data/services/{service_id}/expenses
-Obtener gastos de un servicio `[analyst, admin]`
-
-**Query Params:**
-- `start_date`: ISO 8601 date (opcional)
-- `end_date`: ISO 8601 date (opcional)
-
-**Response (200):**
-```json
-[
-  {
-    "id": 10,
-    "service_id": 1,
-    "amount": 500.00,
-    "category": "Maintenance",
-    "description": "Soporte técnico",
-    "date": "2024-01-15T00:00:00Z"
-  }
-]
-```
-
----
-
-#### POST /data/expenses
-Crear nuevo registro de gasto `[analyst, admin]`
-
-**Request:**
-```json
-{
-  "service_id": 1,
-  "amount": 500.00,
-  "category": "Maintenance",
-  "description": "Soporte técnico",
-  "date": "2024-01-15"
-}
-```
-
----
-
-#### GET /data/analysis/cost-vs-expense/{service_id}
-Análisis de costo vs gasto `[analyst, admin]`
-
-**Query Params:**
-- `start_date`: ISO 8601 date (opcional)
-- `end_date`: ISO 8601 date (opcional)
-
-**Response (200):**
-```json
-{
-  "service_id": 1,
-  "service_name": "Cloud Hosting",
-  "total_costs": 15000.00,
-  "total_expenses": 3200.00,
-  "costs": [...],
-  "expenses": [...],
-  "period_start": "2024-01-01T00:00:00Z",
-  "period_end": "2024-01-31T23:59:59Z"
-}
-```
-
----
-
-### 4. Reports (`/reports`)
-
-> **Roles requeridos**: `analyst` o `admin`
+> **Roles requeridos**: `analyst` o `admin` para generar reportes
 
 #### POST /reports/generate
+
 Generar nuevo reporte PDF
 
 **Request:**
 ```json
 {
   "title": "Reporte Mensual Enero 2024",
-  "report_type": "cost_vs_expense",
-  "service_id": 1,
-  "start_date": "2024-01-01",
-  "end_date": "2024-01-31"
+  "report_type": "data_summary"
 }
 ```
 
-**Tipos de reporte:**
-- `cost_vs_expense`: Comparación de costos vs gastos
-- `monthly_summary`: Resumen mensual
-- `service_analysis`: Análisis por servicio
+**Tipos de reporte disponibles:**
+- `data_summary`: Resumen de datos
+- `trend_analysis`: Análisis de tendencias
 - `custom`: Personalizado
 
-**Response (202):**
+**Response (201):**
 ```json
 {
   "id": 10,
   "title": "Reporte Mensual Enero 2024",
-  "report_type": "cost_vs_expense",
+  "report_type": "data_summary",
   "status": "processing",
   "file_path": null,
   "analysis_summary": null,
@@ -434,6 +273,7 @@ Generar nuevo reporte PDF
 ---
 
 #### GET /reports/list
+
 Listar reportes del usuario
 
 **Query Params:**
@@ -443,25 +283,25 @@ Listar reportes del usuario
 **Response (200):**
 ```json
 {
-  "items": [
+  "reports": [
     {
       "id": 10,
       "title": "Reporte Mensual Enero 2024",
-      "report_type": "cost_vs_expense",
+      "report_type": "data_summary",
       "status": "completed",
       "file_path": "/reports/reporte_20240115_120000.pdf",
+      "analysis_summary": "Resumen del análisis...",
       "created_at": "2024-01-15T12:00:00Z"
     }
   ],
-  "total": 5,
-  "skip": 0,
-  "limit": 20
+  "total": 5
 }
 ```
 
 ---
 
 #### GET /reports/{report_id}
+
 Obtener información de un reporte
 
 **Response (200):**
@@ -469,10 +309,10 @@ Obtener información de un reporte
 {
   "id": 10,
   "title": "Reporte Mensual Enero 2024",
-  "report_type": "cost_vs_expense",
+  "report_type": "data_summary",
   "status": "completed",
   "file_path": "/reports/reporte_20240115_120000.pdf",
-  "analysis_summary": "El costo total fue de $15,000 con un aumento del 12%...",
+  "analysis_summary": "El análisis muestra...",
   "created_at": "2024-01-15T12:00:00Z"
 }
 ```
@@ -480,10 +320,11 @@ Obtener información de un reporte
 ---
 
 #### GET /reports/{report_id}/download
+
 Descargar archivo PDF del reporte
 
 **Response (200):**
-```
+```http
 Content-Type: application/pdf
 Content-Disposition: attachment; filename="reporte_20240115_120000.pdf"
 
@@ -492,10 +333,11 @@ Content-Disposition: attachment; filename="reporte_20240115_120000.pdf"
 
 ---
 
-### 5. Health (`/health`)
+### 4. Health (`/health`)
 
 #### GET /health
-Verificar estado del servicio
+
+Verificar estado del servicio (sin autenticación)
 
 **Response (200):**
 ```json
@@ -507,19 +349,61 @@ Verificar estado del servicio
 
 ---
 
+## Datasets Disponibles para NL2SQL
+
+El sistema puede responder preguntas en lenguaje natural sobre las siguientes tablas:
+
+### Mining Domain
+
+| Tabla | Descripción | Registros |
+|-------|-------------|-----------|
+| `equipment` | Equipos industriales (excavadoras, camiones, etc.) | Variable |
+| `maintenance_events` | Eventos de mantenimiento programado y correctivo | Variable |
+| `failure_events` | Fallos y averías de equipos | Variable |
+
+**Campos principales:**
+- `equipment`: equipment_id, tipo_maquina, marca, modelo, ano
+- `maintenance_events`: fecha, tipo_intervencion, costo_total, duracion_horas
+- `failure_events`: fecha, codigo_falla, descripcion_falla, causa_raiz, impacto
+
+### Support Domain
+
+| Tabla | Descripción | Registros |
+|-------|-------------|-----------|
+| `support_tickets` | Tickets de soporte técnico de clientes | ~8,000 |
+
+**Campos principales:**
+- ticket_id, customer_name, customer_email
+- ticket_type, ticket_subject, ticket_status
+- ticket_priority, ticket_channel
+- customer_satisfaction_rating
+
+### Ejemplos de Preguntas NL2SQL
+
+```
+"¿Cuántos equipos de tipo excavadora tenemos?"
+"¿Cuál es el costo promedio de mantenimiento preventivo?"
+"Muestra los fallos más frecuentes en los últimos 6 meses"
+"¿Cuántos tickets están pendientes de resolución?"
+"¿Cuál es el rating promedio de satisfacción de clientes?"
+```
+
+---
+
 ## Roles y Permisos
 
 | Rol | Permisos |
 |-----|----------|
-| **VIEWER** | - Ver servicios<br>- Chat con LLM<br>- Ver reportes propios |
-| **ANALYST** | - Todo de VIEWER<br>- Crear/editar servicios<br>- Crear costos/gastos<br>- Ver análisis de datos<br>- Generar reportes |
+| **VIEWER** | - Ver conversaciones propias<br>- Chatear con LLM<br>- Ver reportes propios |
+| **ANALYST** | - Todo de VIEWER<br>- Generar reportes |
 | **ADMIN** | - Todos los permisos |
 
 ---
 
-## Errores
+## Errores Comunes
 
 ### 400 Bad Request
+
 ```json
 {
   "detail": "Validation error"
@@ -527,6 +411,7 @@ Verificar estado del servicio
 ```
 
 ### 401 Unauthorized
+
 ```json
 {
   "detail": "Could not validate credentials"
@@ -534,6 +419,7 @@ Verificar estado del servicio
 ```
 
 ### 403 Forbidden
+
 ```json
 {
   "detail": "Not enough permissions"
@@ -541,6 +427,7 @@ Verificar estado del servicio
 ```
 
 ### 404 Not Found
+
 ```json
 {
   "detail": "Resource not found"
@@ -548,6 +435,7 @@ Verificar estado del servicio
 ```
 
 ### 422 Validation Error
+
 ```json
 {
   "detail": [
@@ -560,9 +448,17 @@ Verificar estado del servicio
 }
 ```
 
+### 500 Internal Server Error
+
+```json
+{
+  "detail": "Error processing message: [error details]"
+}
+```
+
 ---
 
-## Diagrama de Flujo de Autenticación
+## Flujo de Autenticación
 
 ```
 ┌─────────┐
@@ -574,7 +470,7 @@ Verificar estado del servicio
 ┌─────────────┐
 │   API Auth  │
 └─────┬───────┘
-      │ access_token
+      │ {access_token, user}
       ▼
 ┌─────────────┐
 │  Frontend   │
@@ -590,13 +486,13 @@ Verificar estado del servicio
 
 ---
 
-## Ejemplo de Integración Frontend (JavaScript/TypeScript)
+## Ejemplo de Integración Frontend (TypeScript)
 
 ```typescript
 // Configuración
 const API_BASE = 'http://localhost:8000';
 
-// Cliente con interceptor
+// Cliente axios con interceptor
 const api = axios.create({
   baseURL: API_BASE,
 });
@@ -638,9 +534,6 @@ async function getConversations(skip = 0, limit = 20) {
 async function generateReport(params: {
   title: string;
   report_type: string;
-  service_id: number;
-  start_date: string;
-  end_date: string;
 }) {
   const { data } = await api.post('/reports/generate', params);
   return data;
@@ -659,3 +552,46 @@ async function downloadReport(reportId: number) {
   link.click();
 }
 ```
+
+---
+
+## Notas Importantes
+
+### ⚠️ Endpoints No Implementados
+
+#### Endpoints Removidos (no implementados)
+
+Los siguientes endpoints **NO EXISTEN** en el código actual:
+- ❌ `/data/services` (todos los métodos)
+- ❌ `/data/costs`
+- ❌ `/data/expenses`
+- ❌ `/data/analysis/cost-vs-expense/{service_id}`
+
+Si necesitas esta funcionalidad, debes implementar el módulo `/data` o usar el sistema NL2SQL para consultar los datasets existentes.
+
+#### Tipos de Reportes
+
+**Antes (documentado)**:
+- `cost_vs_expense`, `monthly_summary`, `service_analysis`, `custom`
+
+**Ahora (implementado)**:
+- `data_summary`, `trend_analysis`, `custom`
+
+---
+
+## Contribuir
+
+Si encuentras discrepancias entre esta documentación y el código:
+
+1. Verificar en Swagger UI: http://localhost:8000/docs
+2. Revisar el código fuente en `app/*/router.py`
+3. Reportar issue en el repositorio
+
+---
+
+## Referencias
+
+- Swagger UI: http://localhost:8000/docs - Documentación interactiva
+- ReDoc: http://localhost:8000/redoc - Documentación alternativa
+- [Setup Guide](../SETUP.md) - Instalación y configuración
+- [README](../README.md) - Overview del proyecto
