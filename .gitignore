@@ -34,3 +34,9 @@ Thumbs.db
 
 # Reports generated
 reports_output/
+
+# Docker
+docker-compose.override.yml
+
+# Logs
+*.log

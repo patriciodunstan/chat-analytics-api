@@ -25,9 +25,40 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(
     title="Chat Analytics API",
-    description="Chat with LLM for data analysis and report generation",
+    description="""
+    Backend FastAPI para consultas de datos en lenguaje natural con LLM.
+
+    ## Características
+
+    - **NL2SQL**: Consultas en español sobre cualquier base de datos
+    - **Auto-descubrimiento**: Detecta automáticamente el esquema de la DB
+    - **Chat con LLM**: Integración con Google Gemini
+    - **Reportes PDF**: Generación automática con gráficos
+    - **Autenticación JWT**: Roles (VIEWER, ANALYST, ADMIN)
+
+    ## Autenticación
+
+    Todos los endpoints (excepto `/auth/register` y `/auth/login`) requieren token JWT:
+
+    ```
+    Authorization: Bearer <token>
+    ```
+
+    ## Datasets disponibles
+
+    - **Minería**: equipment, maintenance_events, failure_events
+    - **Soporte**: support_tickets (~8,000 registros)
+    """,
     version="0.1.0",
     lifespan=lifespan,
+    contact={
+        "name": "Chat Analytics API",
+        "url": "https://github.com/tu-usuario/chat-analytics-api",
+    },
+    license_info={
+        "name": "MIT",
+        "url": "https://opensource.org/licenses/MIT",
+    },
 )
 
 # CORS Middleware

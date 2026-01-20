@@ -1,5 +1,6 @@
 """Pydantic schemas for authentication."""
-from pydantic import BaseModel, EmailStr, ConfigDict
+from datetime import datetime
+from pydantic import BaseModel, EmailStr, ConfigDict, Field
 
 from app.db.models import UserRole
 
@@ -24,6 +25,7 @@ class UserResponse(BaseModel):
     full_name: str
     role: UserRole
     is_active: bool
+    created_at: datetime = Field(description="User creation timestamp")
 
     model_config = ConfigDict(from_attributes=True)
 
