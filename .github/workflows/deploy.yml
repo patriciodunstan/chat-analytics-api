@@ -49,7 +49,7 @@ jobs:
         env:
           DATABASE_URL: postgresql+asyncpg://postgres:postgres@localhost:5432/test_db
           JWT_SECRET: test-secret-key
-          GEMINI_API_KEY: test-api-key
+          LLM_API_KEY: test-api-key
         run: |
           pytest tests/ -v --cov=app --cov-report=term-missing
 
@@ -114,7 +114,7 @@ jobs:
           docker run -d --name test-container -p 8000:8000 \
             -e DATABASE_URL=sqlite+aiosqlite:///:memory: \
             -e JWT_SECRET=test-secret \
-            -e GEMINI_API_KEY=test-key \
+            -e LLM_API_KEY=test-key \
             -e PORT=8000 \
             chat-analytics-api:test
 
