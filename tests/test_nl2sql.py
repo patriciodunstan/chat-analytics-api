@@ -185,6 +185,120 @@ class TestSQLGenerator:
         assert "LEFT JOIN" in result.sql
         assert "equipment" in result.sql
 
+    def test_three_tables_with_intermediate_parent(self):
+        """Test JOIN generation with 3 tables where parent acts as intermediate."""
+        schema = DatabaseSchema(tables=[
+            TableInfo(
+                name="equipment",
+                columns=[
+                    ColumnInfo(name="id", data_type="integer", is_primary_key=True),
+                    ColumnInfo(name="equipment_id", data_type="varchar"),
+                    ColumnInfo(name="tipo_maquina", data_type="varchar"),
+                ],
+                row_count=50,
+            ),
+            TableInfo(
+                name="failure_events",
+                columns=[
+                    ColumnInfo(name="id", data_type="integer", is_primary_key=True),
+                    ColumnInfo(name="equipment_id", data_type="varchar", is_foreign_key=True,
+                              foreign_table="equipment", foreign_column="equipment_id"),
+                    ColumnInfo(name="descripcion_falla", data_type="text"),
+                    ColumnInfo(name="costo_total", data_type="numeric"),
+                ],
+                row_count=3000,
+            ),
+            TableInfo(
+                name="maintenance_events",
+                columns=[
+                    ColumnInfo(name="id", data_type="integer", is_primary_key=True),
+                    ColumnInfo(name="equipment_id", data_type="varchar", is_foreign_key=True,
+                              foreign_table="equipment", foreign_column="equipment_id"),
+                    ColumnInfo(name="tipo_intervencion", data_type="varchar"),
+                    ColumnInfo(name="costo_total", data_type="numeric"),
+                ],
+                row_count=5000,
+            ),
+        ])
+
+        # Intent con 3 tablas: failure_events, equipment, maintenance_events
+        # equipment está explícitamente en la lista
+        intent = ParsedIntent(
+            tables=["failure_events", "equipment", "maintenance_events"],
+            select_columns=["equipment.tipo_maquina", "failure_events.descripcion_falla", "maintenance_events.tipo_intervencion"],
+        )
+
+        result = self.generator.generate(intent, schema)
+
+        # Verificar SQL válido - debe tener 2 LEFT JOINs
+        assert "SELECT" in result.sql
+        assert "LEFT JOIN" in result.sql
+        assert result.sql.count("LEFT JOIN") == 2
+
+        # Verificar que las 3 tablas están en el SQL
+        assert '"failure_events"' in result.sql
+        assert '"equipment"' in result.sql
+        assert '"maintenance_events"' in result.sql
+
+        # Verificar que los JOINs son válidos (no referencian tablas inexistentes)
+        # El SQL debe ser algo como:
+        # FROM "failure_events"
+        # LEFT JOIN "equipment" ON "equipment"."equipment_id" = "failure_events"."equipment_id"
+        # LEFT JOIN "maintenance_events" ON "equipment"."equipment_id" = "maintenance_events"."equipment_id"
+        assert "ON" in result.sql
+        # Verificar que no hay errores de sintaxis comunes
+        assert not result.sql.endswith("JOIN")
+        assert not result.sql.endswith("ON")
+
+    def test_three_tables_implicit_parent(self):
+        """Test JOIN with 3 tables where parent is NOT in the original list."""
+        schema = DatabaseSchema(tables=[
+            TableInfo(
+                name="equipment",
+                columns=[
+                    ColumnInfo(name="id", data_type="integer", is_primary_key=True),
+                    ColumnInfo(name="equipment_id", data_type="varchar"),
+                    ColumnInfo(name="tipo_maquina", data_type="varchar"),
+                ],
+                row_count=50,
+            ),
+            TableInfo(
+                name="failure_events",
+                columns=[
+                    ColumnInfo(name="id", data_type="integer", is_primary_key=True),
+                    ColumnInfo(name="equipment_id", data_type="varchar", is_foreign_key=True,
+                              foreign_table="equipment", foreign_column="equipment_id"),
+                    ColumnInfo(name="descripcion_falla", data_type="text"),
+                ],
+                row_count=3000,
+            ),
+            TableInfo(
+                name="maintenance_events",
+                columns=[
+                    ColumnInfo(name="id", data_type="integer", is_primary_key=True),
+                    ColumnInfo(name="equipment_id", data_type="varchar", is_foreign_key=True,
+                              foreign_table="equipment", foreign_column="equipment_id"),
+                    ColumnInfo(name="tipo_intervencion", data_type="varchar"),
+                ],
+                row_count=5000,
+            ),
+        ])
+
+        # Solo failure_events y maintenance_events, equipment NO está en la lista
+        intent = ParsedIntent(
+            tables=["failure_events", "maintenance_events"],
+            select_columns=["failure_events.descripcion_falla", "maintenance_events.tipo_intervencion"],
+        )
+
+        result = self.generator.generate(intent, schema)
+
+        # Debería agregar automáticamente equipment como intermediaria
+        assert "SELECT" in result.sql
+        assert "LEFT JOIN" in result.sql
+        assert '"equipment"' in result.sql
+        # Debe haber 2 JOINs (failure -> equipment, maintenance -> equipment)
+        assert result.sql.count("LEFT JOIN") == 2
+
 
 class TestQueryExecutor:
     """Tests for QueryExecutor."""
