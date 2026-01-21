@@ -19,6 +19,10 @@ from app.chat.nl2sql.sql_generator import SQLGenerator
 from app.chat.nl2sql.query_executor import QueryExecutor
 from app.chat.nl2sql.prompts import DATA_RESPONSE_PROMPT
 from app.chat.nl2sql.exceptions import NL2QLError
+from app.chat.nl2sql.schemas import QueryResult
+
+# PDF generation
+from app.reports.generator import report_generator
 
 logger = logging.getLogger(__name__)
 
@@ -144,9 +148,14 @@ async def process_chat_message(
     db: AsyncSession,
     user: User,
     user_message: str,
-    conversation_id: Optional[int] = None,
-) -> tuple[Conversation, Message, Message]:
-    """Process a chat message with NL2SQL support."""
+    conversation_id: int | None = None,
+    generate_pdf: bool = False,
+) -> tuple[Conversation, Message, Message, str | None]:
+    """Process a chat message with NL2SQL support.
+
+    Returns:
+        tuple with conversation, user_msg, assistant_msg, pdf_url
+    """
     # Create or get conversation
     if conversation_id:
         conversation = await get_conversation(db, conversation_id, user)
@@ -166,7 +175,7 @@ async def process_chat_message(
     history = await get_conversation_history(db, conversation.id)
 
     # Process with NL2SQL or standard chat
-    response_text = await _process_with_nl2sql(
+    response_text, query_result, sql_description = await _process_with_nl2sql(
         db=db,
         user_message=user_message,
         conversation_history=history[:-1],
@@ -177,21 +186,77 @@ async def process_chat_message(
         db, conversation.id, MessageRole.ASSISTANT, response_text
     )
 
-    return conversation, user_msg, assistant_msg
+    # Generate PDF if requested and we have query results
+    pdf_url = None
+    if generate_pdf and query_result is not None:
+        pdf_url = await _generate_query_pdf(
+            user_message=user_message,
+            response_text=response_text,
+            query_result=query_result,
+            sql_description=sql_description or "Consulta de datos",
+        )
+
+    return conversation, user_msg, assistant_msg, pdf_url
+
+
+async def _generate_query_pdf(
+    user_message: str,
+    response_text: str,
+    query_result: QueryResult,
+    sql_description: str,
+) -> str | None:
+    """Generate PDF from query results."""
+    try:
+        # Crear resumen de datos para el PDF
+        data_summary = {
+            "Consulta": user_message,
+            "Descripción": sql_description,
+            "Total registros": query_result.row_count,
+            "Columnas": ", ".join(query_result.column_names),
+        }
+
+        # Agregar algunos datos de muestra
+        for idx, row in enumerate(query_result.data[:5]):
+            row_data = {
+                f"Fila {idx + 1}": ", ".join(str(v) for v in row.values())
+            }
+            data_summary.update(row_data)
+
+        # Generar PDF
+        filepath = report_generator.generate_summary_report(
+            title=f"Reporte: {user_message[:50]}",
+            data_summary=data_summary,
+            analysis_text=response_text,
+        )
+
+        # Retornar ruta relativa para descargar
+        if os.path.exists(filepath):
+            return f"/api/chat/pdf/{os.path.basename(filepath)}"
+
+        logger.warning(f"PDF file not found after generation: {filepath}")
+        return None
+
+    except Exception as e:
+        logger.error(f"Error generating PDF: {e}", exc_info=True)
+        return None
 
 
 async def _process_with_nl2sql(
     db: AsyncSession,
     user_message: str,
     conversation_history: list[dict],
-) -> str:
-    """Process message with NL2SQL if it's a data query."""
+) -> tuple[str, QueryResult | None, str]:
+    """Process message with NL2SQL if it's a data query.
+
+    Returns:
+        tuple[str, QueryResult | None, str]: response_text, query_result, sql_description
+    """
     try:
         # Paso 1: Detectar si es query de datos (SIN LLM en modo económico)
         use_llm_detection = not ECONOMICAL_MODE
         is_data_query, confidence, reasoning = await query_detector.is_data_query(
             user_message,
-            use_llm=use_llm_detection,  # False en modo económico
+            use_llm=use_llm_detection,
         )
 
         logger.info(
@@ -201,10 +266,11 @@ async def _process_with_nl2sql(
         )
 
         if not is_data_query or confidence < 0.6:
-            return await llm_client.generate_response(
+            response = await llm_client.generate_response(
                 user_message=user_message,
                 conversation_history=conversation_history,
             )
+            return response, None, ""
 
         # Paso 2: Descubrir esquema
         schema = await schema_discovery.discover(db)
@@ -232,21 +298,22 @@ async def _process_with_nl2sql(
 
         if not result.success:
             logger.warning(f"Query execution failed: {result.error_message}")
-            return (
+            error_msg = (
                 f"No pude ejecutar la consulta correctamente. "
                 f"Error: {result.error_message}\n\n"
                 f"Por favor, intenta reformular tu pregunta."
             )
+            return error_msg, None, sql_query.description
 
         # Paso 6: Generar respuesta (SIN LLM en modo económico o resultados grandes)
         if ECONOMICAL_MODE or result.row_count > 100:
-            # Respuesta simple sin LLM
             formatted_results = query_executor.format_results_as_markdown_table(result)
-            return f"""## Resultados ({result.row_count} registros)
+            response_text = f"""## Resultados ({result.row_count} registros)
 
 {formatted_results}
 
 **Resumen:** Se encontraron {result.row_count} registros."""
+            return response_text, result, sql_query.description
 
         # Para resultados pequeños, usar LLM para mejor interpretación
         formatted_results = query_executor.format_results_as_markdown_table(result)
@@ -259,22 +326,25 @@ async def _process_with_nl2sql(
             columns=", ".join(result.column_names),
         )
 
-        return await llm_client.generate_response(
+        response = await llm_client.generate_response(
             user_message=response_prompt,
             conversation_history=[],
         )
+        return response, result, sql_query.description
 
     except NL2QLError as e:
         logger.error(f"NL2SQL error: {e}")
-        return await llm_client.generate_response(
+        response = await llm_client.generate_response(
             user_message=user_message,
             conversation_history=conversation_history,
             context_data={"error_context": str(e)},
         )
+        return response, None, ""
 
     except Exception as e:
         logger.error(f"Unexpected error in NL2SQL: {e}", exc_info=True)
-        return await llm_client.generate_response(
+        response = await llm_client.generate_response(
             user_message=user_message,
             conversation_history=conversation_history,
         )
+        return response, None, ""
