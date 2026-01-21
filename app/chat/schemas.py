@@ -47,6 +47,7 @@ class ChatRequest(BaseModel):
     """Schema for chat request."""
     message: str
     conversation_id: Optional[int] = None
+    generate_pdf: bool = False  # Solicitar generación de PDF
 
 
 class ChatResponse(BaseModel):
@@ -54,6 +55,7 @@ class ChatResponse(BaseModel):
     conversation_id: int
     user_message: MessageResponse
     assistant_message: MessageResponse
+    pdf_url: Optional[str] = None  # URL del PDF si se generó
 
 
 class AnalysisRequest(BaseModel):
